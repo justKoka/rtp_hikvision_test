@@ -1,0 +1,39 @@
+﻿  Validating sources
+  Copying sources remotely to '192.168.1.128'
+  Validating architecture
+  Starting remote build
+  Compiling sources:
+  main.cpp
+D:\cpp\RTP_H264_TEST\RTP_H264_TEST\rtp-util.h(13,35): warning : conversion to ‘uint16_t {aka short unsigned int}’ from ‘int’ may alter its value [-Wconversion]
+D:\cpp\RTP_H264_TEST\RTP_H264_TEST\rtp-util.h(13,35): warning :   return (((uint16_t)ptr[0]) << 8) | ptr[1];
+D:\cpp\RTP_H264_TEST\RTP_H264_TEST\rtp-util.h(13,35): warning :          ~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~
+D:\cpp\RTP_H264_TEST\RTP_H264_TEST\main.cpp(23,15): warning : comparison between signed and unsigned integer expressions [-Wsign-compare]
+D:\cpp\RTP_H264_TEST\RTP_H264_TEST\main.cpp(23,15): warning :   assert(bytes <= sizeof(buffer) - 4);
+D:\cpp\RTP_H264_TEST\RTP_H264_TEST\main.cpp(23,15): warning :          ~~~~~~^~~~~~~~~~~~~~~~~~~~~
+D:\cpp\RTP_H264_TEST\RTP_H264_TEST\main.cpp(37,19): warning : comparison between signed and unsigned integer expressions [-Wsign-compare]
+D:\cpp\RTP_H264_TEST\RTP_H264_TEST\main.cpp(37,19): warning :   assert(bytes + 4 < sizeof(buffer));
+D:\cpp\RTP_H264_TEST\RTP_H264_TEST\main.cpp(37,19): warning :          ~~~~~~~~~~^~~~~~~~~
+D:\cpp\RTP_H264_TEST\RTP_H264_TEST\main.cpp(54,79): warning : conversion to ‘uint8_t {aka unsigned char}’ from ‘int’ may alter its value [-Wconversion]
+D:\cpp\RTP_H264_TEST\RTP_H264_TEST\main.cpp(54,79): warning :    buffer[2] = ((profile - 1) << 6) | ((sampling_frequency_index & 0x0F) << 2) | ((channel_configuration >> 2) & 0x01);
+D:\cpp\RTP_H264_TEST\RTP_H264_TEST\main.cpp(54,79): warning :                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+D:\cpp\RTP_H264_TEST\RTP_H264_TEST\main.cpp(55,53): warning : conversion to ‘uint8_t {aka unsigned char}’ from ‘int’ may alter its value [-Wconversion]
+D:\cpp\RTP_H264_TEST\RTP_H264_TEST\main.cpp(55,53): warning :    buffer[3] = ((channel_configuration & 0x03) << 6) | ((len >> 11) & 0x03); /*0-original_copy*/ /*0-home*/ /*0-copyright_identification_bit*/ /*0-copyright_identification_start*/
+D:\cpp\RTP_H264_TEST\RTP_H264_TEST\main.cpp(55,53): warning :                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~
+D:\cpp\RTP_H264_TEST\RTP_H264_TEST\main.cpp(57,35): warning : conversion to ‘uint8_t {aka unsigned char}’ from ‘int’ may alter its value [-Wconversion]
+D:\cpp\RTP_H264_TEST\RTP_H264_TEST\main.cpp(57,35): warning :    buffer[5] = ((len & 0x07) << 5) | 0x1F;
+D:\cpp\RTP_H264_TEST\RTP_H264_TEST\main.cpp(57,35): warning :                ~~~~~~~~~~~~~~~~~~~~^~~~~~
+D:\cpp\RTP_H264_TEST\RTP_H264_TEST\main.cpp(58,20): warning : conversion to ‘uint8_t {aka unsigned char}’ from ‘int’ may alter its value [-Wconversion]
+D:\cpp\RTP_H264_TEST\RTP_H264_TEST\main.cpp(58,20): warning :    buffer[6] = 0xFC | ((len / 1024) & 0x03);
+D:\cpp\RTP_H264_TEST\RTP_H264_TEST\main.cpp(58,20): warning :                ~~~~~^~~~~~~~~~~~~~~~~~~~~~~
+D:\cpp\RTP_H264_TEST\RTP_H264_TEST\main.cpp(82,56): warning : conversion to ‘int’ from ‘size_t {aka long unsigned int}’ may alter its value [-Wconversion]
+D:\cpp\RTP_H264_TEST\RTP_H264_TEST\main.cpp(82,56): warning :   rtp_payload_decode_input(ctx.decoder, ctx.packet, ctx.size);
+D:\cpp\RTP_H264_TEST\RTP_H264_TEST\main.cpp(82,56): warning :                                                     ~~~~^~~~
+D:\cpp\RTP_H264_TEST\RTP_H264_TEST\main.cpp(86,56): warning : conversion to ‘int’ from ‘size_t {aka long unsigned int}’ may alter its value [-Wconversion]
+D:\cpp\RTP_H264_TEST\RTP_H264_TEST\main.cpp(86,56): warning :   rtp_payload_decode_input(ctx.decoder, ctx.packet, ctx.size);
+D:\cpp\RTP_H264_TEST\RTP_H264_TEST\main.cpp(86,56): warning :                                                     ~~~~^~~~
+D:\cpp\RTP_H264_TEST\RTP_H264_TEST\main.cpp(110,20): warning : comparison between signed and unsigned integer expressions [-Wsign-compare]
+D:\cpp\RTP_H264_TEST\RTP_H264_TEST\main.cpp(110,20): warning :   for (int i = 0; i < strlen(input); i += 2) {
+D:\cpp\RTP_H264_TEST\RTP_H264_TEST\main.cpp(110,20): warning :                   ~~^~~~~~~~~~~~~~~
+D:\cpp\RTP_H264_TEST\RTP_H264_TEST\main.cpp(111,72): warning : conversion to ‘uint8_t {aka unsigned char}’ from ‘int’ may alter its value [-Wconversion]
+  Linking objects
+  RTP_H264_TEST.vcxproj -> D:\cpp\RTP_H264_TEST\RTP_H264_TEST\bin\x64\Debug\RTP_H264_TEST.out
