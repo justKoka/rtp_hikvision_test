@@ -35,9 +35,9 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{3f5dd83e-6875-4f14-86bc-91408f5f0f27}</ProjectGuid>
+    <ProjectGuid>{92dc1d57-9b71-4dbd-83b1-ad9e0d2ab715}</ProjectGuid>
     <Keyword>Linux</Keyword>
-    <RootNamespace>RTP_H264_H265_TEST</RootNamespace>
+    <RootNamespace>RTP_HLS_TEST</RootNamespace>
     <MinimumVisualStudioVersion>15.0</MinimumVisualStudioVersion>
     <ApplicationType>Linux</ApplicationType>
     <ApplicationTypeRevision>1.0</ApplicationTypeRevision>
@@ -75,21 +75,72 @@
   <ImportGroup Label="PropertySheets" />
   <PropertyGroup Label="UserMacros" />
   <ItemGroup>
+    <ClCompile Include="fmp4-writer.cpp" />
+    <ClCompile Include="hls-fmp4.cpp" />
+    <ClCompile Include="hls-m3u8.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="rtp-h264-unpack.cpp" />
-    <ClCompile Include="rtp-packet.cpp" />
-    <ClCompile Include="rtp-payload.cpp" />
+    <ClCompile Include="mov-av1.cpp" />
+    <ClCompile Include="mov-avc1.cpp" />
+    <ClCompile Include="mov-elst.cpp" />
+    <ClCompile Include="mov-esds.cpp" />
+    <ClCompile Include="mov-ftyp.cpp" />
+    <ClCompile Include="mov-hvcc.cpp" />
+    <ClCompile Include="mov-mfhd.cpp" />
+    <ClCompile Include="mov-mvhd.cpp" />
+    <ClCompile Include="mov-opus.cpp" />
+    <ClCompile Include="mov-reader.cpp" />
+    <ClCompile Include="mov-sidx.cpp" />
+    <ClCompile Include="mov-stco.cpp" />
+    <ClCompile Include="mov-stsd.cpp" />
+    <ClCompile Include="mov-stss.cpp" />
+    <ClCompile Include="mov-stts.cpp" />
+    <ClCompile Include="mov-tag.cpp" />
+    <ClCompile Include="mov-tfdt.cpp" />
+    <ClCompile Include="mov-tfhd.cpp" />
+    <ClCompile Include="mov-tfra.cpp" />
+    <ClCompile Include="mov-track.cpp" />
+    <ClCompile Include="mov-trex.cpp" />
+    <ClCompile Include="mov-trun.cpp" />
+    <ClCompile Include="mov-tx3g.cpp" />
+    <ClCompile Include="mov-writer.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="rtcp-header.h" />
-    <ClInclude Include="rtp-header.h" />
-    <ClInclude Include="rtp-packet.h" />
-    <ClInclude Include="rtp-payload-internal.h" />
-    <ClInclude Include="rtp-payload.h" />
-    <ClInclude Include="rtp-profile.h" />
-    <ClInclude Include="rtp-util.h" />
+    <ClInclude Include="fmp4-writer.h" />
+    <ClInclude Include="hls-fmp4.h" />
+    <ClInclude Include="hls-m3u8.h" />
+    <ClInclude Include="hls-param.h" />
+    <ClInclude Include="list.h" />
+    <ClInclude Include="mov-atom.h" />
+    <ClInclude Include="mov-box.h" />
+    <ClInclude Include="mov-buffer.h" />
+    <ClInclude Include="mov-format.h" />
+    <ClInclude Include="mov-internal.h" />
+    <ClInclude Include="mov-ioutil.h" />
+    <ClInclude Include="mov-reader.h" />
+    <ClInclude Include="mov-writer.h" />
+    <ClInclude Include="mpeg-ps.h" />
+    <ClInclude Include="mpeg-ts.h" />
   </ItemGroup>
-  <ItemDefinitionGroup />
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">
+    <Link>
+      <LibraryDependencies>avformat;avcodec;avutil;avdevice;swresample;swscale</LibraryDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">
+    <Link>
+      <LibraryDependencies>avformat;avcodec;avutil;avdevice;swresample;swscale</LibraryDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Link>
+      <LibraryDependencies>avformat;avcodec;avutil;avdevice;swresample;swscale</LibraryDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x86'">
+    <Link>
+      <LibraryDependencies>avformat;avcodec;avutil;avdevice;swresample;swscale</LibraryDependencies>
+    </Link>
+  </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets" />
 </Project>

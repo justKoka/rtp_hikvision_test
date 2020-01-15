@@ -3,8 +3,9 @@
 #include <cstring>
 #include "rtp-payload-internal.h"
 #include <assert.h>
-
-static int convertCharStreamToHex(const char[], uint8_t *);
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 struct rtp_payload_test_t
 {
@@ -61,8 +62,7 @@ static void rtp_decode_packet(void* param, const void *packet, int bytes, uint32
 	memcpy(buffer + size, packet, bytes);
 	size += bytes;
 	//rtp packet decoded
-	//now able to send decoded rtp payload to livestream
-	//rtp_payload_encode_input(ctx->encoder, buffer, size, timestamp);
+	//now able to send decoded rtp payload to livestreams
 }
 
 int main()
