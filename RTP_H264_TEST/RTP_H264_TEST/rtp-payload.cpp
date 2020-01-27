@@ -69,8 +69,8 @@ void* rtp_payload_decode_create(int payload, const char* name, struct rtp_payloa
 	ctx = (rtp_payload_delegate_t*)calloc(1, sizeof(*ctx));
 	if (ctx)
 	{
-		ctx->encoder = rtp_h264_encode();
-		/*ctx->decoder = rtp_h264_decode();*/
+		/*ctx->encoder = rtp_h264_encode();*/
+		ctx->decoder = rtp_h264_decode();
 		if (/*rtp_payload_find(payload, name, ctx) < 0
 			|| */NULL == (ctx->packer = ctx->decoder->create(handler, cbparam)))
 		{

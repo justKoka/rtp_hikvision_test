@@ -3,11 +3,43 @@
   Validating architecture
   Starting remote build
   Compiling sources:
-  rtp-payload.cpp
+  main.cpp
 D:\cpp\RTP_HIKVISION_TEST\RTP_H264_TEST\RTP_H264_TEST\rtp-util.h(13,35): warning : conversion to ‘uint16_t {aka short unsigned int}’ from ‘int’ may alter its value [-Wconversion]
 D:\cpp\RTP_HIKVISION_TEST\RTP_H264_TEST\RTP_H264_TEST\rtp-util.h(13,35): warning :   return (((uint16_t)ptr[0]) << 8) | ptr[1];
 D:\cpp\RTP_HIKVISION_TEST\RTP_H264_TEST\RTP_H264_TEST\rtp-util.h(13,35): warning :          ~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~
+D:\cpp\RTP_HIKVISION_TEST\RTP_H264_TEST\RTP_H264_TEST\main.cpp(25,15): warning : comparison between signed and unsigned integer expressions [-Wsign-compare]
+D:\cpp\RTP_HIKVISION_TEST\RTP_H264_TEST\RTP_H264_TEST\main.cpp(25,15): warning :   assert(bytes <= sizeof(buffer) - 4);
+D:\cpp\RTP_HIKVISION_TEST\RTP_H264_TEST\RTP_H264_TEST\main.cpp(25,15): warning :          ~~~~~~^~~~~~~~~~~~~~~~~~~~~
+D:\cpp\RTP_HIKVISION_TEST\RTP_H264_TEST\RTP_H264_TEST\main.cpp(39,19): warning : comparison between signed and unsigned integer expressions [-Wsign-compare]
+D:\cpp\RTP_HIKVISION_TEST\RTP_H264_TEST\RTP_H264_TEST\main.cpp(39,19): warning :   assert(bytes + 4 < sizeof(buffer));
+D:\cpp\RTP_HIKVISION_TEST\RTP_H264_TEST\RTP_H264_TEST\main.cpp(39,19): warning :          ~~~~~~~~~~^~~~~~~~~
+D:\cpp\RTP_HIKVISION_TEST\RTP_H264_TEST\RTP_H264_TEST\main.cpp(56,79): warning : conversion to ‘uint8_t {aka unsigned char}’ from ‘int’ may alter its value [-Wconversion]
+D:\cpp\RTP_HIKVISION_TEST\RTP_H264_TEST\RTP_H264_TEST\main.cpp(56,79): warning :    buffer[2] = ((profile - 1) << 6) | ((sampling_frequency_index & 0x0F) << 2) | ((channel_configuration >> 2) & 0x01);
+D:\cpp\RTP_HIKVISION_TEST\RTP_H264_TEST\RTP_H264_TEST\main.cpp(56,79): warning :                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+D:\cpp\RTP_HIKVISION_TEST\RTP_H264_TEST\RTP_H264_TEST\main.cpp(57,53): warning : conversion to ‘uint8_t {aka unsigned char}’ from ‘int’ may alter its value [-Wconversion]
+D:\cpp\RTP_HIKVISION_TEST\RTP_H264_TEST\RTP_H264_TEST\main.cpp(57,53): warning :    buffer[3] = ((channel_configuration & 0x03) << 6) | ((len >> 11) & 0x03); /*0-original_copy*/ /*0-home*/ /*0-copyright_identification_bit*/ /*0-copyright_identification_start*/
+D:\cpp\RTP_HIKVISION_TEST\RTP_H264_TEST\RTP_H264_TEST\main.cpp(57,53): warning :                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~
+D:\cpp\RTP_HIKVISION_TEST\RTP_H264_TEST\RTP_H264_TEST\main.cpp(59,35): warning : conversion to ‘uint8_t {aka unsigned char}’ from ‘int’ may alter its value [-Wconversion]
+D:\cpp\RTP_HIKVISION_TEST\RTP_H264_TEST\RTP_H264_TEST\main.cpp(59,35): warning :    buffer[5] = ((len & 0x07) << 5) | 0x1F;
+D:\cpp\RTP_HIKVISION_TEST\RTP_H264_TEST\RTP_H264_TEST\main.cpp(59,35): warning :                ~~~~~~~~~~~~~~~~~~~~^~~~~~
+D:\cpp\RTP_HIKVISION_TEST\RTP_H264_TEST\RTP_H264_TEST\main.cpp(60,20): warning : conversion to ‘uint8_t {aka unsigned char}’ from ‘int’ may alter its value [-Wconversion]
+D:\cpp\RTP_HIKVISION_TEST\RTP_H264_TEST\RTP_H264_TEST\main.cpp(60,20): warning :    buffer[6] = 0xFC | ((len / 1024) & 0x03);
+D:\cpp\RTP_HIKVISION_TEST\RTP_H264_TEST\RTP_H264_TEST\main.cpp(60,20): warning :                ~~~~~^~~~~~~~~~~~~~~~~~~~~~~
+D:\cpp\RTP_HIKVISION_TEST\RTP_H264_TEST\RTP_H264_TEST\main.cpp(106,20): warning : comparison between signed and unsigned integer expressions [-Wsign-compare]
+D:\cpp\RTP_HIKVISION_TEST\RTP_H264_TEST\RTP_H264_TEST\main.cpp(106,20): warning :   for (int i = 0; i < strlen(input); i += 2) {
+D:\cpp\RTP_HIKVISION_TEST\RTP_H264_TEST\RTP_H264_TEST\main.cpp(106,20): warning :                   ~~^~~~~~~~~~~~~~~
+D:\cpp\RTP_HIKVISION_TEST\RTP_H264_TEST\RTP_H264_TEST\main.cpp(107,72): warning : conversion to ‘uint8_t {aka unsigned char}’ from ‘int’ may alter its value [-Wconversion]
+D:\cpp\RTP_HIKVISION_TEST\RTP_H264_TEST\RTP_H264_TEST\main.cpp(104,12): warning : ‘int convertCharStreamToHex(const char*, uint8_t*)’ defined but not used [-Wunused-function]
+D:\cpp\RTP_HIKVISION_TEST\RTP_H264_TEST\RTP_H264_TEST\main.cpp(104,12): warning :  static int convertCharStreamToHex(const char input[], uint8_t *output) {
+D:\cpp\RTP_HIKVISION_TEST\RTP_H264_TEST\RTP_H264_TEST\main.cpp(104,12): warning :             ^~~~~~~~~~~~~~~~~~~~~~
+D:\cpp\RTP_HIKVISION_TEST\RTP_H264_TEST\RTP_H264_TEST\main.cpp(33,13): warning : ‘void rtp_decode_packet(void*, const void*, int, uint32_t, int)’ defined but not used [-Wunused-function]
+D:\cpp\RTP_HIKVISION_TEST\RTP_H264_TEST\RTP_H264_TEST\main.cpp(33,13): warning :  static void rtp_decode_packet(void* param, const void *packet, int bytes, uint32_t timestamp, int flags)
+D:\cpp\RTP_HIKVISION_TEST\RTP_H264_TEST\RTP_H264_TEST\main.cpp(33,13): warning :              ^~~~~~~~~~~~~~~~~
+D:\cpp\RTP_HIKVISION_TEST\RTP_H264_TEST\RTP_H264_TEST\main.cpp(29,13): warning : ‘void rtp_free(void*, void*)’ defined but not used [-Wunused-function]
+D:\cpp\RTP_HIKVISION_TEST\RTP_H264_TEST\RTP_H264_TEST\main.cpp(29,13): warning :  static void rtp_free(void* /*param*/, void * /*packet*/)
+D:\cpp\RTP_HIKVISION_TEST\RTP_H264_TEST\RTP_H264_TEST\main.cpp(29,13): warning :              ^~~~~~~~
+D:\cpp\RTP_HIKVISION_TEST\RTP_H264_TEST\RTP_H264_TEST\main.cpp(22,14): warning : ‘void* rtp_alloc(void*, int)’ defined but not used [-Wunused-function]
+D:\cpp\RTP_HIKVISION_TEST\RTP_H264_TEST\RTP_H264_TEST\main.cpp(22,14): warning :  static void* rtp_alloc(void* /*param*/, int bytes)
+D:\cpp\RTP_HIKVISION_TEST\RTP_H264_TEST\RTP_H264_TEST\main.cpp(22,14): warning :               ^~~~~~~~~
   Linking objects
-D:\cpp\RTP_HIKVISION_TEST\RTP_H264_TEST\RTP_H264_TEST\obj\x64\Debug\rtp-payload.o : error : In function `rtp_payload_find(int, char const*, rtp_payload_delegate_t*)':
-D:\cpp\RTP_HIKVISION_TEST\RTP_H264_TEST\RTP_H264_TEST\rtp-payload.cpp(130): error : undefined reference to `rtp_h265_decode()'
-collect2 : error : ld returned 1 exit status
+  RTP_H264_TEST.vcxproj -> D:\cpp\RTP_HIKVISION_TEST\RTP_H264_TEST\RTP_H264_TEST\bin\x64\Debug\RTP_H264_TEST.out

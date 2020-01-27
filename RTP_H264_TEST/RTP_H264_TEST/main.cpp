@@ -3,6 +3,8 @@
 #include <cstring>
 #include "rtp-payload-internal.h"
 #include <assert.h>
+#include "pcap.h"
+#include <netinet/in.h>
 
 static int convertCharStreamToHex(const char[], uint8_t *);
 
@@ -84,6 +86,19 @@ int main()
 	ctx.size = 768;
 	ctx.packet = rtp_packet;
 	rtp_payload_decode_input(ctx.decoder, ctx.packet, ctx.size);
+	
+	/*utils::pcap_filereader rtp("rtp-264-fix.pcap");
+	FILE* fp = fopen("rtp-h264-udp-length-with-sc.264", "wb");
+	const uint32_t udp_pos = 34;
+	const uint32_t udp_length_pos = 4;
+	const uint32_t udp_header_length = 8;
+	const uint8_t start_code[] = {0x00, 0x00, 0x00, 0x01}
+	for (auto&& p : rtp) {
+		uint16_t* udp_length_ptr = (uint16_t*)(p.payload + udp_pos + udp_length_pos);
+		uint16_t udp_length = ntohs(*udp_length_ptr);
+		fwrite(p.payload + udp_pos + udp_header_length, 1, udp_length - 8, fp);
+	}
+	return 0;*/
 }
 
 static int convertCharStreamToHex(const char input[], uint8_t *output) {
