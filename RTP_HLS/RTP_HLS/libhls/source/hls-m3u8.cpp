@@ -15,12 +15,13 @@ struct hls_m3u8_t
 	int live;
 	int version;
 	int64_t seq; // m3u8 sequence number (base 0)
-	int64_t duration;// target duration
+	int64_t duration; // target duration
 
 	size_t count;
 	struct list_head root;
 
 	char* ext_x_map;
+	FILE* fd;
 };
 
 struct hls_segment_t
@@ -158,7 +159,7 @@ int hls_m3u8_playlist(struct hls_m3u8_t* m3u8, int eof, char* playlist, size_t b
 		m3u8->version,
 		(m3u8->duration + 999) / 1000,
 		m3u8->seq,
-		m3u8->live ? "" : "#EXT-X-PLAYLIST-TYPE:VOD\n",
+		m3u8->live ? "#EXT-X-PLAYLIST-TYPE:EVENT\n" : "#EXT-X-PLAYLIST-TYPE:VOD\n",
 		m3u8->live ? "" : "#EXT-X-ALLOW-CACHE:YES\n");
 	if (r <= 0 || (size_t)r >= bytes)
 		return ENOMEM;

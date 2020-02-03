@@ -2,7 +2,7 @@
 #include <iostream>
 #include <cstring>
 #include "librtp/include/rtp-payload-internal.h"
-#include "libhls/include/hls-fmp4.h"
+#include "libhls/include/hls_segmenter_mp4.h"
 #include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -16,8 +16,18 @@ struct rtp_payload_test_t
 	void* decoder;
 	size_t size;
 	uint8_t *packet;
+	hls_segmenter *hls_segmenter;
 	/*uint8_t packet[64 * 1024];*/
 };
+
+static int convertCharStreamToHex(const char input[], uint8_t *output) {
+	int j = 0;
+	for (int i = 0; i < strlen(input); i += 2) {
+		output[j] = (isalpha(input[i]) ? input[i] - 87 : input[i] - 48) * 16 + (isalpha(input[i + 1]) ? input[i + 1] - 87 : input[i + 1] - 48);
+		j++;
+	}
+	return 1;
+}
 
 static void* rtp_alloc(void* /*param*/, int bytes)
 {
@@ -64,7 +74,11 @@ static void rtp_decode_packet(void* param, const void *packet, int bytes, uint32
 	size += bytes;
 
 	//send to fmp4 segmenter
-	//hls_segmenter_mp4_send_packet(buffer, size, ctx->encoding);
+	hls_segmenter_mp4_send_packet(ctx->hls_segmenter, ,buffer, size, ctx->encoding);
+}
+
+static int send_rtp_to_segmenter(void *decoder, const void* rtp, int bytes, int track) {
+	rtp_payload_decode_input(decoder, rtp, bytes);
 }
 
 int main()
@@ -91,11 +105,6 @@ int main()
 	//ctx.encoding = "H265"
 }
 
-static int convertCharStreamToHex(const char input[], uint8_t *output) {
-	int j = 0;
-	for (int i = 0; i < strlen(input); i += 2) {
-		output[j] = (isalpha(input[i]) ? input[i] - 87 : input[i] - 48) * 16 + (isalpha(input[i + 1]) ? input[i + 1] - 87 : input[i + 1] - 48);
-		j++;
-	}
-	return 1;
-}
+//interface changes
+//audio pcma, pcmu, aac
+//2 channels (video/audio, audio)

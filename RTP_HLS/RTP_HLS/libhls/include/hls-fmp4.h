@@ -4,8 +4,6 @@
 #include <stdint.h>
 #include <stddef.h>
 
-int hls_segmenter_mp4_send_packet(const void *packet, int size, const char *encoding);
-
 #ifdef __cplusplus
 extern "C" {
 #endif

@@ -1,14 +1,5 @@
-extern "C"
-{
-#include "libavformat/avformat.h"
-}
-#include <iostream>
-#include "../include/hls-fmp4.h"
-#include "../include/hls-m3u8.h"
-#include "../include/hls-param.h"
-#include "../../libmov/include/mov-format.h"
-#include "../../libmov/include/mpeg-ps.h"
-#include <assert.h>
+#include "../include/hls_segmenter_mp4.h"
+#include "../../librtp/include/sps_parse.h"
 
 static char s_packet[2 * 1024 * 1024];
 
@@ -66,9 +57,6 @@ static int hls_init_segment(hls_fmp4_t* hls, hls_m3u8_t* m3u)
 	int bytes = hls_fmp4_init_segment(hls, s_packet, sizeof(s_packet));
 
 	FILE* fp = fopen("HLS/hls_0.mp4", "wb");
-	
-	if (fp == NULL)
-		auto er = errno;
 
 	fwrite(s_packet, 1, bytes, fp);
 	fclose(fp);
@@ -86,6 +74,16 @@ static int hls_segment(void* m3u8, const void* data, size_t bytes, int64_t /*pts
 	fclose(fp);
 
 	return hls_m3u8_add((hls_m3u8_t*)m3u8, name, dts, duration, 0);
+}
+
+static int hls_ts_segment(void* m3u, const void* data, size_t bytes, int64_t, int64_t dts, int64_t duration) {
+	static int i = 0;
+	static char name[128] = { 0 };
+	snprintf(name, sizeof(name), "HLS/hls_%d.mp4", ++i);
+	FILE* fp = fopen(name, "wb");
+	fwrite(data, 1, bytes, fp);
+	fclose(fp);
+	return add_segment((hls_m3u_t*)m3u, duration, name);
 }
 
 void hls_segmenter_fmp4_test(const char* file)
@@ -160,51 +158,67 @@ void hls_segmenter_fmp4_test(const char* file)
 	fclose(fp);
 }
 
-int hls_segmenter_mp4_send_packet(hls_fmp4_t* hls, int64_t timestamp, int track, const void *packet, int size, const char *encoding, int flags) {
-	//double time_base = 1 / 90000; // standart of h264 is 90KHz
-	AVPacket pkt;
-	if (0 == strcmp("AAC", encoding))
-	{
-		//printf("[A] pts: %08lld, dts: %08lld\n", pts, dts);
-		hls_fmp4_input(hls, track, packet, size, timestamp, timestamp, 0); 
-	}
-	else if (0 == strcmp("H264", encoding))
-	{
-		//printf("[V] pts: %08lld, dts: %08lld\n", pts, dts);
-		hls_fmp4_input(hls, track, packet, size, timestamp, timestamp, (flags & AV_PKT_FLAG_KEY) ? MOV_AV_FLAG_KEYFREAME : 0);//
-	}
-	else if (0 == strcmp("H265", encoding))
-	{
-		//printf("[V] pts: %08lld, dts: %08lld\n", pts, dts);
-		hls_fmp4_input(hls, track, packet, size, timestamp, timestamp, (flags & AV_PKT_FLAG_KEY) ? MOV_AV_FLAG_KEYFREAME : 0); //
-	}
-	else
-	{
-		assert(0);
-	}
+int main() {
+	hls_segmenter_fmp4_test("rtsp://admin:456redko@192.168.1.64/Streaming/Channels/102");
+	return 0;
 }
 
-int hls_segmenter_mp4_init(int nb_streams, const char** encoding) {
-	hls_m3u8_t* m3u = hls_m3u8_create(0, 7);
-	hls_fmp4_t* hls = hls_fmp4_create(HLS_DURATION * 1000, hls_segment, m3u);
+int hls_segmenter_mp4_send_packet(hls_segmenter* hls_segmenter, int64_t timestamp, int track, const void *packet, int size, const char *encoding, int keyframe, int nalu_type) {
+		double time_base = 1 / 90000; // standart of h264 is 90KHz
+		int64_t pts, dts;
+		pts = (int64_t)((timestamp - hls_segmenter->first_timestamp) * time_base * 1000);
+		dts = pts;
+		if (0 == strcmp("AAC", encoding))
+		{
+			//printf("[A] pts: %08lld, dts: %08lld\n", pts, dts);
+			return hls_fmp4_input(hls_segmenter->hls, track, packet, size, pts, dts, 0);
+		}
+		else if (0 == strcmp("H264", encoding))
+		{
+			//printf("[V] pts: %08lld, dts: %08lld\n", pts, dts);
+			return hls_fmp4_input(hls_segmenter->hls, track, packet, size, pts, dts, (!keyframe) ? MOV_AV_FLAG_KEYFREAME : 0);
+		}
+		else if (0 == strcmp("H265", encoding))
+		{
+			//printf("[V] pts: %08lld, dts: %08lld\n", pts, dts);
+			return hls_fmp4_input(hls_segmenter->hls, track, packet, size, pts, dts, (!keyframe) ? MOV_AV_FLAG_KEYFREAME : 0);
+		}
+		else
+		{
+			assert(0);
+		}
+}
 
-	int track_aac = -1;
-	int track_264 = -1;
-	int track_265 = -1;
+int hls_segmenter_mp4_init(hls_segmenter* hls_segmenter, uint8_t* sps, int sps_size, int duration /* one segment duration in seconds */, int nb_streams, int codec[]) {
+	hls_m3u_t m3u(7, 0, duration,12, 6, "playlist.m3u8");
+	playlist_init(&m3u, "playlist.m3u8");
+	//hls_fmp4_t* hls = hls_fmp4_create(HLS_DURATION * 1000, hls_segment, m3u);
+	hls_fmp4_t* hls = hls_fmp4_create(duration * 1000, hls_segment, NULL);
+	
+	constexpr int NALU_offset = 5;
+	Parse(hls_segmenter, sps + NALU_offset, sps_size); //width and height
+	hls_segmenter->extra_data = sps;
+	hls_segmenter->extra_data_size = sps_size;
+
+	//fetching audio params
+
 	for (unsigned int i = 0; i < nb_streams; i++)
 	{
-		if (AV_CODEC_ID_AAC == st->codecpar->codec_id)
-			track_aac = hls_fmp4_add_audio(hls, MOV_OBJECT_AAC, st->codecpar->channels, st->codecpar->bits_per_coded_sample, st->codecpar->sample_rate, st->codecpar->extradata, st->codecpar->extradata_size);
-		else if (AV_CODEC_ID_H264 == st->codecpar->codec_id)
-			track_264 = hls_fmp4_add_video(hls, MOV_OBJECT_H264, st->codecpar->width, st->codecpar->height, st->codecpar->extradata, st->codecpar->extradata_size);
-		else if (AV_CODEC_ID_H265 == st->codecpar->codec_id)
-			track_265 = hls_fmp4_add_video(hls, MOV_OBJECT_HEVC, st->codecpar->width, st->codecpar->height, st->codecpar->extradata, st->codecpar->extradata_size);
+		if (codec::aac == codec[i])
+			hls_segmenter->track_aac = hls_fmp4_add_audio(hls, MOV_OBJECT_AAC, hls_segmenter->channels, hls_segmenter->bits_per_coded_sample, hls_segmenter->sample_rate, hls_segmenter->extra_data, hls_segmenter->extra_data_size);
+		else if (codec::h264 == codec[i])
+			hls_segmenter->track_264 = hls_fmp4_add_video(hls, MOV_OBJECT_H264, hls_segmenter->width, hls_segmenter->height, hls_segmenter->extra_data, hls_segmenter->extra_data_size);
+		else if (codec::h265 == codec[i])
+			hls_segmenter->track_265 = hls_fmp4_add_video(hls, MOV_OBJECT_HEVC, hls_segmenter->width, hls_segmenter->height, hls_segmenter->extra_data, hls_segmenter->extra_data_size);
 	}
-
-	// write init segment
-	hls_init_segment(hls, m3u);
+	
+	hls_segmenter->hls = hls;
+	hls_segmenter->m3u8 = &m3u;
 }
 
 int hls_segmenter_mp4_destroy() {
-
+	//set #EXT-X-ENDLIST in the end of m3u8	
 }
+
+//TODO:
+//m3u8 live referencing and writing

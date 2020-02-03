@@ -77,6 +77,7 @@
   <ItemGroup>
     <ClCompile Include="libhls\source\fmp4-writer.cpp" />
     <ClCompile Include="libhls\source\hls-fmp4.cpp" />
+    <ClCompile Include="libhls\source\hls-m3u.cpp" />
     <ClCompile Include="libhls\source\hls-m3u8.cpp" />
     <ClCompile Include="libhls\source\hls_segmenter_mp4.cpp" />
     <ClCompile Include="libmov\source\mov-av1.cpp" />
@@ -116,13 +117,16 @@
     <ClCompile Include="librtp\source\rtp-h265-unpack.cpp" />
     <ClCompile Include="librtp\source\rtp-packet.cpp" />
     <ClCompile Include="librtp\source\rtp-payload.cpp" />
+    <ClCompile Include="librtp\source\sps_parse.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="libhls\include\fmp4-writer.h" />
     <ClInclude Include="libhls\include\hls-fmp4.h" />
+    <ClInclude Include="libhls\include\hls-m3u.h" />
     <ClInclude Include="libhls\include\hls-m3u8.h" />
     <ClInclude Include="libhls\include\hls-param.h" />
+    <ClInclude Include="libhls\include\hls_segmenter_mp4.h" />
     <ClInclude Include="libhls\include\list.h" />
     <ClInclude Include="libmov\include\mov-atom.h" />
     <ClInclude Include="libmov\include\mov-box.h" />
@@ -141,6 +145,7 @@
     <ClInclude Include="librtp\include\rtp-payload.h" />
     <ClInclude Include="librtp\include\rtp-profile.h" />
     <ClInclude Include="librtp\include\rtp-util.h" />
+    <ClInclude Include="librtp\include\sps_parse.h" />
   </ItemGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">
     <Link>
