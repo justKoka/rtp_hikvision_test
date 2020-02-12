@@ -12,6 +12,7 @@
 #define FU_START(v) (v & 0x80)
 #define FU_END(v)	(v & 0x40)
 #define FU_NAL(v)	(v & 0x1F)
+#define H264_I_FRAME 2
 
 struct rtp_decode_h264_t
 {
@@ -186,11 +187,22 @@ static int rtp_h264_unpack_mtap(struct rtp_decode_h264_t *unpacker, const uint8_
 |                               :   ...OPTIONAL RTP padding     |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 */
+
+#pragma pack(push, 1)
+struct H264FUheader {
+	uint8_t S : 1;
+	uint8_t E : 1;
+	uint8_t R : 1;
+	uint8_t Type : 5;
+};
+#pragma pack(pop)
+
 static int rtp_h264_unpack_fu(struct rtp_decode_h264_t *unpacker, const uint8_t* ptr, int bytes, uint32_t timestamp, int fu_b)
 {
 	int n;
 	uint8_t fuheader;
 	//uint16_t don;
+	
 
 	n = fu_b ? 4 : 2;
 	if (bytes < n)
@@ -220,6 +232,10 @@ static int rtp_h264_unpack_fu(struct rtp_decode_h264_t *unpacker, const uint8_t*
 		unpacker->size = 1; // NAL unit type byte
 		unpacker->ptr[0] = (ptr[0]/*indicator*/ & 0xE0) | (fuheader & 0x1F);
 		assert(H264_NAL(unpacker->ptr[0]) > 0 && H264_NAL(unpacker->ptr[0]) < 24);
+		//fuheader check keyframe (nal_unit_payload_type == 5)
+		H264FUheader *fheader = (H264FUheader*)(ptr + 1);
+		if (fheader->Type == 5)
+			unpacker->flags |= H264_I_FRAME;
 	}
 	else
 	{
@@ -245,6 +261,8 @@ static int rtp_h264_unpack_fu(struct rtp_decode_h264_t *unpacker, const uint8_t*
 		unpacker->flags = 0;
 		unpacker->size = 0; // reset
 	}
+
+
 
 	return 1; // packet handled
 }

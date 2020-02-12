@@ -26,6 +26,8 @@ NUH temporal ID plus 1 (TID) : 3 bits
 #define FU_END(v)	(v & 0x40)
 #define FU_NAL(v)	(v & 0x3F)
 
+#define H265_I_FRAME 2
+
 struct rtp_decode_h265_t
 {
 	struct rtp_payload_t handler;
@@ -139,6 +141,15 @@ static int rtp_h265_unpack_ap(struct rtp_decode_h265_t *unpacker, const uint8_t*
 |S|E|   FuType  |
 +---------------+
 */
+
+#pragma pack(push, 1)
+struct H265FUheader {
+	uint8_t S : 1;
+	uint8_t E : 1;
+	uint8_t Type : 6;
+};
+#pragma pack(pop)
+
 static int rtp_h265_unpack_fu(struct rtp_decode_h265_t *unpacker, const uint8_t* ptr, int bytes, uint32_t timestamp)
 {
 	int n;
@@ -172,6 +183,9 @@ static int rtp_h265_unpack_fu(struct rtp_decode_h265_t *unpacker, const uint8_t*
 		unpacker->size = 2; // NAL unit type byte
 		unpacker->ptr[0] = FU_NAL(fuheader) << 1;
 		unpacker->ptr[1] = 1;
+		H265FUheader *fheader = (H265FUheader*)(ptr + 1);
+		if (fheader->Type == 5)
+			unpacker->flags |= H265_I_FRAME;
 	}
 	else
 	{

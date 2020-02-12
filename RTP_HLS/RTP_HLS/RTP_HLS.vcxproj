@@ -80,6 +80,7 @@
     <ClCompile Include="libhls\source\hls-m3u.cpp" />
     <ClCompile Include="libhls\source\hls-m3u8.cpp" />
     <ClCompile Include="libhls\source\hls_segmenter_mp4.cpp" />
+    <ClCompile Include="libhls\source\ualaw_to_linear.cpp" />
     <ClCompile Include="libmov\source\mov-av1.cpp" />
     <ClCompile Include="libmov\source\mov-avc1.cpp" />
     <ClCompile Include="libmov\source\mov-dinf.cpp" />
@@ -115,7 +116,9 @@
     <ClCompile Include="libmov\source\mov-writer.cpp" />
     <ClCompile Include="librtp\source\rtp-h264-unpack.cpp" />
     <ClCompile Include="librtp\source\rtp-h265-unpack.cpp" />
+    <ClCompile Include="librtp\source\rtp-pack.cpp" />
     <ClCompile Include="librtp\source\rtp-packet.cpp" />
+    <ClCompile Include="librtp\source\rtp-payload-helper.cpp" />
     <ClCompile Include="librtp\source\rtp-payload.cpp" />
     <ClCompile Include="librtp\source\sps_parse.cpp" />
     <ClCompile Include="main.cpp" />
@@ -128,6 +131,8 @@
     <ClInclude Include="libhls\include\hls-param.h" />
     <ClInclude Include="libhls\include\hls_segmenter_mp4.h" />
     <ClInclude Include="libhls\include\list.h" />
+    <ClInclude Include="libhls\include\pcm_to_aac.h" />
+    <ClInclude Include="libhls\include\ualaw_to_linear.h" />
     <ClInclude Include="libmov\include\mov-atom.h" />
     <ClInclude Include="libmov\include\mov-box.h" />
     <ClInclude Include="libmov\include\mov-buffer.h" />
@@ -141,6 +146,7 @@
     <ClInclude Include="librtp\include\rtcp-header.h" />
     <ClInclude Include="librtp\include\rtp-header.h" />
     <ClInclude Include="librtp\include\rtp-packet.h" />
+    <ClInclude Include="librtp\include\rtp-payload-helper.h" />
     <ClInclude Include="librtp\include\rtp-payload-internal.h" />
     <ClInclude Include="librtp\include\rtp-payload.h" />
     <ClInclude Include="librtp\include\rtp-profile.h" />

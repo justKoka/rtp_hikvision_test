@@ -2,17 +2,7 @@
 #include <cstdlib>
 #include <fstream>
 #include <iostream>
-#include <string>
 #include <sstream>
-
-int playlist_init(hls_m3u_t* m3u, const char filename[]) {
-	m3u->filename = filename;
-	m3u->fd = fopen(m3u->filename.c_str(), "wb");
-	if (m3u->fd != NULL)
-		return 0;
-	else
-		return errno;
-}
 
 int add_segment(hls_m3u_t* m3u, int duration, const char uri[]) {
 	if (m3u->count < m3u->capacity)

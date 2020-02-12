@@ -159,14 +159,15 @@ void hls_segmenter_fmp4_test(const char* file)
 }
 
 int main() {
-	hls_segmenter_fmp4_test("rtsp://admin:456redko@192.168.1.64/Streaming/Channels/102");
+	hls_segmenter_fmp4_test("rtsp://admin2:456redko@192.168.17.106/onvif-media/media.amp?profile=arthur_h264&sessiontimeout=60&streamtype=unicast");
 	return 0;
 }
 
-int hls_segmenter_mp4_send_packet(hls_segmenter* hls_segmenter, int64_t timestamp, int track, const void *packet, int size, const char *encoding, int keyframe, int nalu_type) {
+int hls_segmenter_mp4_send_packet(hls_segmenter* hls_segmenter, int64_t timestamp, int track, const void *packet, int size, const char *encoding, int keyframe) {
 		double time_base = 1 / 90000; // standart of h264 is 90KHz
 		int64_t pts, dts;
 		pts = (int64_t)((timestamp - hls_segmenter->first_timestamp) * time_base * 1000);
+		//pts = (int64_t)(timestamp * time_base * 1000);
 		dts = pts;
 		if (0 == strcmp("AAC", encoding))
 		{
@@ -190,8 +191,7 @@ int hls_segmenter_mp4_send_packet(hls_segmenter* hls_segmenter, int64_t timestam
 }
 
 int hls_segmenter_mp4_init(hls_segmenter* hls_segmenter, uint8_t* sps, int sps_size, int duration /* one segment duration in seconds */, int nb_streams, int codec[]) {
-	hls_m3u_t m3u(7, 0, duration,12, 6, "playlist.m3u8");
-	playlist_init(&m3u, "playlist.m3u8");
+	hls_m3u_t m3u(7, 0, duration, 12, 6, "playlist.m3u8");
 	//hls_fmp4_t* hls = hls_fmp4_create(HLS_DURATION * 1000, hls_segment, m3u);
 	hls_fmp4_t* hls = hls_fmp4_create(duration * 1000, hls_segment, NULL);
 	
@@ -219,6 +219,3 @@ int hls_segmenter_mp4_init(hls_segmenter* hls_segmenter, uint8_t* sps, int sps_s
 int hls_segmenter_mp4_destroy() {
 	//set #EXT-X-ENDLIST in the end of m3u8	
 }
-
-//TODO:
-//m3u8 live referencing and writing

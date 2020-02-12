@@ -38,6 +38,6 @@ struct hls_segmenter {
 	int extra_data_size;
 };
 
-int hls_segmenter_mp4_send_packet(hls_segmenter* hls_segmenter, int64_t timestamp, int track, const void *packet, int size, const char *encoding, int keyframe, int nalu_type);
+int hls_segmenter_mp4_send_packet(hls_segmenter* hls_segmenter, int64_t timestamp, int track, const void *packet, int size, const char *encoding, int keyframe);
 int hls_segmenter_mp4_init(hls_segmenter* hls_segmenter, uint8_t* sps, int sps_size, int duration /* one segment duration in seconds */, int nb_streams, int codec[]);
 int hls_segmenter_mp4_destroy();

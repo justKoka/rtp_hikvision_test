@@ -2,6 +2,7 @@
 #include <stdint.h>
 #include <stddef.h>
 #include <list>
+#include <string>
 
 struct hls_m3u_t
 {
@@ -15,13 +16,13 @@ struct hls_m3u_t
 	std::string filename;
 	FILE* fd;
 	hls_m3u_t() { }
-	hls_m3u_t(int version, int64_t seq, int64_t duration, size_t capacity, size_t remaining, std::string filename) : version(version), seq(seq), duration(duration), filename(filename)  {
-		playlist_init(this, filename.c_str());
-	}
+	hls_m3u_t(int version, int64_t seq, int64_t duration, size_t capacity, size_t remaining, std::string filename) : version(version), seq(seq), duration(duration), filename(filename) { }
 };
 
-int playlist_init(hls_m3u_t* m3u, const char filename[]);
 int playlist_write(hls_m3u_t* m3u);
 int delete_segment(hls_m3u_t* m3u, int number_of_segments); // deletes n segments from front, rewrites playlist
 int add_segment(hls_m3u_t* m3u, int duration, const char uri[]); // adds segment to back, writes segment to playlist
 std::string playlist_request(hls_m3u_t* m3u);
+
+
+
