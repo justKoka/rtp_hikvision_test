@@ -22,55 +22,12 @@ struct rtp_payload_delegate_t
 /// @return 0-ok, <0-error
 static int rtp_payload_find(int payload, const char* encoding, struct rtp_payload_delegate_t* codec);
 
-//void* rtp_payload_encode_create(int payload, const char* name, uint16_t seq, uint32_t ssrc, struct rtp_payload_t *handler, void* cbparam)
-//{
-//	int size;
-//	struct rtp_payload_delegate_t* ctx;
-//
-//	ctx = (rtp_payload_delegate_t*)calloc(1, sizeof(*ctx));
-//	if (ctx)
-//	{
-//		size = rtp_packet_getsize();
-//		if (rtp_payload_find(payload, name, ctx) < 0
-//			|| NULL == (ctx->packer = ctx->encoder->create(size, (uint8_t)payload, seq, ssrc, handler, cbparam)))
-//		{
-//			free(ctx);
-//			return NULL;
-//		}
-//	}
-//	return ctx;
-//}
-
-void rtp_payload_encode_destroy(void* encoder)
-{
-	struct rtp_payload_delegate_t* ctx;
-	ctx = (struct rtp_payload_delegate_t*)encoder;
-	ctx->encoder->destroy(ctx->packer);
-	free(ctx);
-}
-
-void rtp_payload_encode_getinfo(void* encoder, uint16_t* seq, uint32_t* timestamp)
-{
-	struct rtp_payload_delegate_t* ctx;
-	ctx = (struct rtp_payload_delegate_t*)encoder;
-	ctx->encoder->get_info(ctx->packer, seq, timestamp);
-}
-
-int rtp_payload_encode_input(void* encoder, const void* data, int bytes, uint32_t timestamp)
-{
-	struct rtp_payload_delegate_t* ctx;
-	ctx = (struct rtp_payload_delegate_t*)encoder;
-	return ctx->encoder->input(ctx->packer, data, bytes, timestamp);
-}
-
 void* rtp_payload_decode_create(int payload, const char* name, struct rtp_payload_t *handler, void* cbparam)
 {
 	struct rtp_payload_delegate_t* ctx;
 	ctx = (rtp_payload_delegate_t*)calloc(1, sizeof(*ctx));
 	if (ctx)
 	{
-		//ctx->encoder = rtp_h264_encode();
-		/*ctx->decoder = rtp_h264_decode();*/
 		if (rtp_payload_find(payload, name, ctx) < 0
 			|| NULL == (ctx->packer = ctx->decoder->create(handler, cbparam)))
 		{
@@ -120,21 +77,25 @@ static int rtp_payload_find(int payload, const char* encoding, struct rtp_payloa
 		if (0 == strcasecmp(encoding, "H264"))
 		{
 			// H.264 video (MPEG-4 Part 10) (RFC 6184)
-			/*codec->encoder = rtp_h264_encode();*/
 			codec->decoder = rtp_h264_decode();
 		}
 		else if (0 == strcasecmp(encoding, "H265") || 0 == strcasecmp(encoding, "HEVC"))
 		{
 			// H.265 video (HEVC) (RFC 7798)
-			/*codec->encoder = rtp_h265_encode();*/
 			codec->decoder = rtp_h265_decode();
 		}
 		else if (0 == strcasecmp(encoding, "mpeg4-generic"))
 		{
 			/// RFC3640 RTP Payload Format for Transport of MPEG-4 Elementary Streams
 			/// 4.1. MIME Type Registration (p27)
-			/*codec->encoder = rtp_mpeg4_generic_encode();*/
 			codec->decoder = rtp_mpeg4_generic_decode();
+		}
+		else if (0 == strcasecmp(encoding, "MP4A-LATM"))
+		{
+			// RFC6416 RTP Payload Format for MPEG-4 Audio/Visual Streams
+			// 6. RTP Packetization of MPEG-4 Audio Bitstreams (p15)
+			// 7.3 Media Type Registration for MPEG-4 Audio (p21)
+			codec->decoder = rtp_mp4a_latm_decode();
 		}
 	}
 	else {
@@ -144,25 +105,8 @@ static int rtp_payload_find(int payload, const char* encoding, struct rtp_payloa
 		case RTP_PAYLOAD_PCMA: // ITU-T G.711 PCM A-Law audio 64 kbit/s (RFC 3551)
 		case RTP_PAYLOAD_G722: // ITU-T G.722 audio 64 kbit/s (RFC 3551)
 		case RTP_PAYLOAD_G729: // ITU-T G.729 and G.729a audio 8 kbit/s (RFC 3551)
-			//codec->encoder = rtp_common_encode();
 			codec->decoder = rtp_common_decode();
 			break;
-
-		//case RTP_PAYLOAD_MPA: // MPEG-1 or MPEG-2 audio only (RFC 3551, RFC 2250)
-		//case RTP_PAYLOAD_MPV: // MPEG-1 and MPEG-2 video (RFC 2250)
-		//	codec->encoder = rtp_mpeg1or2es_encode();
-		//	codec->decoder = rtp_mpeg1or2es_decode();
-		//	break;
-
-		//case RTP_PAYLOAD_MP2T: // MPEG-2 transport stream (RFC 2250)
-		//	codec->encoder = rtp_ts_encode();
-		//	codec->decoder = rtp_ts_decode();
-		//	break;
-
-		//case RTP_PAYLOAD_JPEG:
-		//case RTP_PAYLOAD_H263:
-		//	return -1; // TODO
-		//	break;
 		default:
 			return -1; // not support
 		}

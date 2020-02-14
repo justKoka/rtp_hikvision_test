@@ -18,6 +18,19 @@ struct codec {
 	const char* encoding;
 };
 
+struct rtp_payload_test_t
+{
+	int payload;
+	const char* encoding;
+	int track; // number of track in fmp4
+	void* encoder;
+	void* decoder;
+	size_t size;
+	uint8_t *packet;
+	hls_segmenter *hsegmenter;
+	/*uint8_t packet[64 * 1024];*/
+};
+
 struct hls_segmenter {
 	hls_fmp4_t* hls;
 	hls_m3u_t* m3u8;
@@ -39,5 +52,5 @@ struct hls_segmenter {
 };
 
 int hls_segmenter_mp4_send_packet(hls_segmenter* hls_segmenter, int64_t timestamp, int track, const void *packet, int size, const char *encoding, int keyframe);
-int hls_segmenter_mp4_init(hls_segmenter* hls_segmenter, uint8_t* sps, int sps_size, int duration /* one segment duration in seconds */, int nb_streams, int codec[]);
+int hls_segmenter_mp4_init(hls_segmenter* hls_segmenter, uint8_t* sps, int sps_size, int duration /* one segment duration in seconds */, int nb_streams, codec codecs[]);
 int hls_segmenter_mp4_destroy();

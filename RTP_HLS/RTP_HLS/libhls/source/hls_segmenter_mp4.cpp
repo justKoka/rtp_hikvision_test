@@ -3,6 +3,13 @@
 
 static char s_packet[2 * 1024 * 1024];
 
+static void* rtp_alloc(void* /*param*/, int bytes)
+{
+	static uint8_t buffer[2 * 1024 * 1024 + 4] = { 0, 0, 0, 1, };
+	assert(bytes <= sizeof(buffer) - 4);
+	return buffer + 4;
+}
+
 static void ffmpeg_init()
 {
 	avcodec_register_all();
@@ -196,11 +203,20 @@ int hls_segmenter_mp4_init(hls_segmenter* hls_segmenter, uint8_t* sps, int sps_s
 	hls_fmp4_t* hls = hls_fmp4_create(duration * 1000, hls_segment, NULL);
 	
 	constexpr int NALU_offset = 5;
-	Parse(hls_segmenter, sps + NALU_offset, sps_size); //width and height
-	hls_segmenter->extra_data = sps;
+	Parse(hls_segmenter, sps + NALU_offset, sps_size - NALU_offset); //width and height
+	hls_segmenter->extra_data = sps + NALU_offset;
 	hls_segmenter->extra_data_size = sps_size;
 
 	//fetching audio params
+
+	struct rtp_payload_test_t ctxVideo;
+	ctxVideo.payload = 96;
+	ctxVideo.encoding = "H264";
+	struct rtp_payload_t handler;
+	handler.alloc = rtp_alloc;
+	handler.free = rtp_free;
+	handler.packet = rtp_decode_packet;
+	ctx.decoder = rtp_payload_decode_create(ctx.payload, ctx.encoding, &handler, &ctx);
 
 	for (unsigned int i = 0; i < nb_streams; i++)
 	{
