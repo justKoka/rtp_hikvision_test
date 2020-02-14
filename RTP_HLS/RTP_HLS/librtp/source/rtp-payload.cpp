@@ -129,6 +129,13 @@ static int rtp_payload_find(int payload, const char* encoding, struct rtp_payloa
 			/*codec->encoder = rtp_h265_encode();*/
 			codec->decoder = rtp_h265_decode();
 		}
+		else if (0 == strcasecmp(encoding, "mpeg4-generic"))
+		{
+			/// RFC3640 RTP Payload Format for Transport of MPEG-4 Elementary Streams
+			/// 4.1. MIME Type Registration (p27)
+			/*codec->encoder = rtp_mpeg4_generic_encode();*/
+			codec->decoder = rtp_mpeg4_generic_decode();
+		}
 	}
 	else {
 		switch (payload)

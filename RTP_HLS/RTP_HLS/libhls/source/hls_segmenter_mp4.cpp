@@ -190,7 +190,7 @@ int hls_segmenter_mp4_send_packet(hls_segmenter* hls_segmenter, int64_t timestam
 		}
 }
 
-int hls_segmenter_mp4_init(hls_segmenter* hls_segmenter, uint8_t* sps, int sps_size, int duration /* one segment duration in seconds */, int nb_streams, int codec[]) {
+int hls_segmenter_mp4_init(hls_segmenter* hls_segmenter, uint8_t* sps, int sps_size, int duration /* one segment duration in seconds */, int nb_streams, codec codecs[]) {
 	hls_m3u_t m3u(7, 0, duration, 12, 6, "playlist.m3u8");
 	//hls_fmp4_t* hls = hls_fmp4_create(HLS_DURATION * 1000, hls_segment, m3u);
 	hls_fmp4_t* hls = hls_fmp4_create(duration * 1000, hls_segment, NULL);
@@ -204,11 +204,11 @@ int hls_segmenter_mp4_init(hls_segmenter* hls_segmenter, uint8_t* sps, int sps_s
 
 	for (unsigned int i = 0; i < nb_streams; i++)
 	{
-		if (codec::aac == codec[i])
+		if (0 == strcmp("AAC", codecs[i].encoding))
 			hls_segmenter->track_aac = hls_fmp4_add_audio(hls, MOV_OBJECT_AAC, hls_segmenter->channels, hls_segmenter->bits_per_coded_sample, hls_segmenter->sample_rate, hls_segmenter->extra_data, hls_segmenter->extra_data_size);
-		else if (codec::h264 == codec[i])
+		else if (0 == strcmp("H264", codecs[i].encoding))
 			hls_segmenter->track_264 = hls_fmp4_add_video(hls, MOV_OBJECT_H264, hls_segmenter->width, hls_segmenter->height, hls_segmenter->extra_data, hls_segmenter->extra_data_size);
-		else if (codec::h265 == codec[i])
+		else if (0 == strcmp("H265", codecs[i].encoding))
 			hls_segmenter->track_265 = hls_fmp4_add_video(hls, MOV_OBJECT_HEVC, hls_segmenter->width, hls_segmenter->height, hls_segmenter->extra_data, hls_segmenter->extra_data_size);
 	}
 	

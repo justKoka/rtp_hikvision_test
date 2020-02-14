@@ -11,11 +11,11 @@ extern "C"
 #include "../../libmov/include/mov-format.h"
 #include "../../libmov/include/mpeg-ps.h"
 #include <assert.h>
+#include "../../librtp/include/rtp-payload-internal.h"
 
-enum codec {
-	h264,
-	h265,
-	aac
+struct codec {
+	int track;
+	const char* encoding;
 };
 
 struct hls_segmenter {
