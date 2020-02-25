@@ -14,7 +14,8 @@ int mov_read_elst(struct mov_t* mov, const struct mov_box_t* box)
 	mov_buffer_r24(&mov->io); /* flags */
 	entry_count = mov_buffer_r32(&mov->io);
 
-	assert(0 == track->elst_count && NULL == track->elst);
+	if (!(0 == track->elst_count && NULL == track->elst))
+		return -1;
 	if (track->elst_count < entry_count)
 	{
 		void* p = realloc(track->elst, sizeof(struct mov_elst_t) * entry_count);
@@ -32,7 +33,6 @@ int mov_read_elst(struct mov_t* mov, const struct mov_box_t* box)
 		}
 		else
 		{
-			assert(0 == version);
 			track->elst[i].segment_duration = mov_buffer_r32(&mov->io);
 			track->elst[i].media_time = (int32_t)mov_buffer_r32(&mov->io);
 		}
@@ -52,7 +52,6 @@ size_t mov_write_elst(const struct mov_t* mov)
 	uint8_t version;
 	const struct mov_track_t* track = mov->track;
 
-    assert(track->start_dts == track->samples[0].dts);
 	version = track->tkhd.duration > UINT32_MAX ? 1 : 0;
 
     // in media time scale units, in composition time

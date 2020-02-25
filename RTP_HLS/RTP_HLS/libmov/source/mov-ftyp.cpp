@@ -14,7 +14,7 @@ int mov_read_ftyp(struct mov_t* mov, const struct mov_box_t* box)
 		mov->ftyp.compatible_brands[mov->ftyp.brands_count] = mov_buffer_r32(&mov->io);
 	}
 
-	assert(box->size == 4 * (uint64_t)mov->ftyp.brands_count + 8);
+	/*assert(box->size == 4 * (uint64_t)mov->ftyp.brands_count + 8);*/
 	mov_buffer_skip(&mov->io, box->size - 4 * (uint64_t)mov->ftyp.brands_count - 8 ); // skip compatible_brands
 	return 0;
 }

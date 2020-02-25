@@ -167,7 +167,7 @@ void mov_writer_destroy(struct mov_writer_t* writer)
 
 		mov_buffer_seek(&mov->io, offset);
 		mov_write_moov(mov);
-		assert(mov_buffer_tell(&mov->io) == offset2 + co64);
+		/*assert(mov_buffer_tell(&mov->io) == offset2 + co64);*/
 		offset2 = mov_buffer_tell(&mov->io);
 
 		mov_writer_move(mov, writer->mdat_offset, offset, (size_t)(offset2 - offset));
@@ -186,7 +186,7 @@ static int mov_writer_move(struct mov_t* mov, uint64_t to, uint64_t from, size_t
 	uint64_t i, j;
 	void* buffer[2];
 
-	assert(bytes < INT32_MAX);
+	/*assert(bytes < INT32_MAX);*/
 	ptr = (uint8_t*)malloc((size_t)(bytes * 2));
 	if (NULL == ptr)
 		return -ENOMEM;

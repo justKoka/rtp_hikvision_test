@@ -93,7 +93,6 @@ int mov_add_audio(struct mov_track_t* track, const struct mov_mvhd_t* mvhd, uint
     audio->u.audio.samplesize = (uint16_t)bits_per_sample;
     audio->u.audio.samplerate = (sample_rate > 56635 ? 0 : sample_rate) << 16;
 
-    assert(0 != mov_object_to_tag(object));
     track->tag = mov_object_to_tag(object);
     track->handler_type = MOV_AUDIO;
     track->handler_descr = "SoundHandler";
@@ -139,7 +138,6 @@ int mov_add_video(struct mov_track_t* track, const struct mov_mvhd_t* mvhd, uint
     video->u.visual.horizresolution = 0x00480000;
     video->u.visual.vertresolution = 0x00480000;
 
-    assert(0 != mov_object_to_tag(object));
     track->tag = mov_object_to_tag(object);
     track->handler_type = MOV_VIDEO;
     track->handler_descr = "VideoHandler";
@@ -179,7 +177,6 @@ int mov_add_subtitle(struct mov_track_t* track, const struct mov_mvhd_t* mvhd, u
     subtitle->object_type_indication = object;
     subtitle->stream_type = MP4_STREAM_VISUAL; // Visually composed tracks including video and text are layered using the 'layer' value.
 
-    assert(0 != mov_object_to_tag(object));
     track->tag = mov_object_to_tag(object);
     track->handler_type = MOV_SUBT;
     track->handler_descr = "SubtitleHandler";
@@ -270,7 +267,7 @@ size_t mov_write_minf(const struct mov_t* mov)
     }
     else
     {
-        assert(0);
+		return -1;
     }
 
     size += mov_write_dinf(mov);

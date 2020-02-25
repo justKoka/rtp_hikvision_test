@@ -58,7 +58,6 @@ int mov_read_tkhd(struct mov_t* mov, const struct mov_box_t* box)
 	}
 	else
 	{
-		assert(0 == version);
 		creation_time = mov_buffer_r32(&mov->io);
 		modification_time = mov_buffer_r32(&mov->io);
 		track_ID = mov_buffer_r32(&mov->io);

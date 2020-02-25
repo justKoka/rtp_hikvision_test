@@ -18,7 +18,6 @@ static int rtp_decode_rfc2250(void* p, const void* packet, int bytes)
 	if (!helper || 0 != rtp_packet_deserialize(&pkt, packet, bytes) || pkt.payloadlen < 1)
 		return -EINVAL;
 
-	assert(pkt.payloadlen > 0);
 	helper->handler.packet(helper->cbparam, pkt.payload, pkt.payloadlen, pkt.rtp.timestamp, 0);
 	return 1; // packet handled
 }

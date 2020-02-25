@@ -42,7 +42,6 @@ int rtp_packet_deserialize(struct rtp_packet_t *pkt, const void* data, int bytes
 	pkt->rtp.seq = RTP_SEQ(v);
 	pkt->rtp.timestamp = nbo_r32(ptr + 4);
 	pkt->rtp.ssrc = nbo_r32(ptr + 8);
-	assert(RTP_VERSION == pkt->rtp.v);
 
 	hdrlen = RTP_FIXED_HEADER + pkt->rtp.cc * 4;
 	if (RTP_VERSION != pkt->rtp.v || bytes < hdrlen + (pkt->rtp.x ? 4 : 0) + (pkt->rtp.p ? 1 : 0))
@@ -54,7 +53,6 @@ int rtp_packet_deserialize(struct rtp_packet_t *pkt, const void* data, int bytes
 		pkt->csrc[i] = nbo_r32(ptr + 12 + i * 4);
 	}
 
-	assert(bytes >= hdrlen);
 	pkt->payload = (uint8_t*)ptr + hdrlen;
 	pkt->payloadlen = bytes - hdrlen;
 
@@ -62,13 +60,11 @@ int rtp_packet_deserialize(struct rtp_packet_t *pkt, const void* data, int bytes
 	if (1 == pkt->rtp.x)
 	{
 		const uint8_t *rtpext = ptr + hdrlen;
-		assert(pkt->payloadlen >= 4);
 		pkt->extension = rtpext + 4;
 		pkt->reserved = nbo_r16(rtpext);
 		pkt->extlen = nbo_r16(rtpext + 2) * 4;
 		if (pkt->extlen + 4 > pkt->payloadlen)
 		{
-			assert(0);
 			return -1;
 		}
 		else
@@ -84,7 +80,6 @@ int rtp_packet_deserialize(struct rtp_packet_t *pkt, const void* data, int bytes
 		uint8_t padding = ptr[bytes - 1];
 		if (pkt->payloadlen < padding)
 		{
-			assert(0);
 			return -1;
 		}
 		else
@@ -104,7 +99,6 @@ int rtp_packet_serialize_header(const struct rtp_packet_t *pkt, void* data, int 
 
 	if (RTP_VERSION != pkt->rtp.v || 0 != (pkt->extlen % 4))
 	{
-		assert(0); // RTP version field must equal 2 (p66)
 		return -1;
 	}
 
@@ -127,7 +121,6 @@ int rtp_packet_serialize_header(const struct rtp_packet_t *pkt, void* data, int 
 	if (1 == pkt->rtp.x)
 	{
 		// 5.3.1 RTP Header Extension
-		assert(0 == (pkt->extlen % 4));
 		nbo_w16(ptr, pkt->reserved);
 		nbo_w16(ptr + 2, pkt->extlen / 4);
 		memcpy(ptr + 4, pkt->extension, pkt->extlen);

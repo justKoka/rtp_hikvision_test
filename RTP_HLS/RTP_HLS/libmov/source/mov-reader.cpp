@@ -72,7 +72,7 @@ static int mov_index_build(struct mov_track_t* track)
 		if (track->samples[i].flags & MOV_AV_FLAG_KEYFREAME)
 			stbl->stss[j++] = i + 1; // uint32_t sample_number, start from 1
 	}
-	assert(j == stbl->stss_count);
+	/*assert(j == stbl->stss_count);*/
 	return 0;
 }
 
@@ -287,10 +287,10 @@ int mov_reader_box(struct mov_t* mov, const struct mov_box_t* parent)
 			uint64_t pos, pos2;
 			pos = mov_buffer_tell(&mov->io);
 			r = parse(mov, &box);
-			assert(0 == r);
+			/*assert(0 == r);*/
 			if (0 != r) return r;
 			pos2 = mov_buffer_tell(&mov->io);
-			assert(pos2 - pos == box.size);
+			/*assert(pos2 - pos == box.size);*/
 			mov_buffer_skip(&mov->io, box.size - (pos2 - pos));
 		}
 	}
@@ -373,7 +373,7 @@ static struct mov_track_t* mov_reader_next(struct mov_reader_t* reader)
 	for (i = 0; i < reader->mov.track_count; i++)
 	{
 		track2 = &reader->mov.tracks[i];
-		assert(track2->sample_offset <= track2->sample_count);
+		/*assert(track2->sample_offset <= track2->sample_count);*/
 		if (track2->sample_offset >= track2->sample_count)
 			continue;
 
@@ -401,7 +401,7 @@ int mov_reader_read(struct mov_reader_t* reader, void* buffer, size_t bytes, mov
 		return 0; // EOF
 	}
 
-	assert(track->sample_offset < track->sample_count);
+	/*assert(track->sample_offset < track->sample_count);*/
 	sample = &track->samples[track->sample_offset];
 	if (bytes < sample->bytes)
 		return ENOMEM;
@@ -414,7 +414,7 @@ int mov_reader_read(struct mov_reader_t* reader, void* buffer, size_t bytes, mov
 	}
 
 	track->sample_offset++; //mark as read
-	assert(sample->sample_description_index > 0);
+	/*assert(sample->sample_description_index > 0);*/
 	onread(param, track->tkhd.track_ID, /*sample->sample_description_index-1,*/ buffer, sample->bytes, sample->pts * 1000 / track->mdhd.timescale, sample->dts * 1000 / track->mdhd.timescale, sample->flags);
 	return 1;
 }
@@ -499,7 +499,7 @@ static int mov_stss_seek(struct mov_track_t* track, int64_t *timestamp)
 
 	idx = mid = start = 0;
 	end = track->stbl.stss_count;
-	assert(track->stbl.stss_count > 0);
+	/*assert(track->stbl.stss_count > 0);*/
 	clock = *timestamp * track->mdhd.timescale / 1000; // mvhd timescale
 
 	while (start < end)
@@ -510,7 +510,6 @@ static int mov_stss_seek(struct mov_track_t* track, int64_t *timestamp)
 		if (idx < 1 || idx > track->sample_count)
 		{
 			// start from 1
-			assert(0);
 			return -1;
 		}
 

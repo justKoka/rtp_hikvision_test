@@ -22,7 +22,6 @@ static int rtp_decode_mp4a_latm(void* p, const void* packet, int bytes)
 
 	if (helper->lost)
 	{
-		assert(0 == helper->size);
 		return 0; // packet discard
 	}
 
@@ -47,7 +46,6 @@ static int rtp_decode_mp4a_latm(void* p, const void* packet, int bytes)
 
 			if (ptr + len > pend)
 			{
-				assert(0);
 				helper->size = 0;
 				helper->lost = 1;
 				helper->flags |= RTP_PAYLOAD_FLAG_PACKET_LOST;

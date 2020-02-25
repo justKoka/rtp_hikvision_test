@@ -71,7 +71,6 @@ int rtp_packet_getsize()
 
 static int rtp_payload_find(int payload, const char* encoding, struct rtp_payload_delegate_t* codec)
 {
-	assert(payload >= 0 && payload <= 127);
 	if (payload >= 96 && encoding)
 	{
 		if (0 == strcasecmp(encoding, "H264"))

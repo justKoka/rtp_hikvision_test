@@ -155,8 +155,6 @@ int hls_fmp4_input(struct hls_fmp4_t* hls, int track, const void* data, size_t b
 	int force_new_segment;
 	int64_t duration;
 
-	assert(dts < hls->dts_last + hls->duration || PTS_NO_VALUE == hls->dts_last); // ???
-
 	// PTS/DTS rewind
 	force_new_segment = 0;
 	if (dts + hls->duration < hls->dts_last || NULL == data || 0 == bytes)

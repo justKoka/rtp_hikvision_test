@@ -26,7 +26,6 @@ static int rtp_decode_mpeg4_generic(void* p, const void* packet, int bytes)
 
 	if (helper->lost)
 	{
-		assert(0 == helper->size);
 		return 0; // packet discard
 	}
 
@@ -40,7 +39,6 @@ static int rtp_decode_mpeg4_generic(void* p, const void* packet, int bytes)
 
 	if (ptr + au_header_length /*AU-size*/ > pend || au_header_length < 2)
 	{
-		assert(0);
 		helper->size = 0;
 		helper->lost = 1;
 		helper->flags |= RTP_PAYLOAD_FLAG_PACKET_LOST;
@@ -51,7 +49,6 @@ static int rtp_decode_mpeg4_generic(void* p, const void* packet, int bytes)
 	// SDP fmtp: sizeLength=13; indexLength=3; indexDeltaLength=3;
 	au_size = 2; // only AU-size
 	au_numbers = au_header_length / au_size;
-	assert(0 == au_header_length % au_size);
 	ptr += 2; // skip AU headers length section 2-bytes
 	pau = ptr + au_header_length; // point to Access Unit
 
@@ -61,7 +58,6 @@ static int rtp_decode_mpeg4_generic(void* p, const void* packet, int bytes)
 		size = size >> 3; // bit -> byte
 		if (pau + size > pend)
 		{
-			assert(0);
 			helper->size = 0;
 			helper->lost = 1;
 			helper->flags |= RTP_PAYLOAD_FLAG_PACKET_LOST;

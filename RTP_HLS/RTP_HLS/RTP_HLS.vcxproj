@@ -79,7 +79,6 @@
     <ClCompile Include="libhls\source\fmp4-writer.cpp" />
     <ClCompile Include="libhls\source\hls-fmp4.cpp" />
     <ClCompile Include="libhls\source\hls-m3u.cpp" />
-    <ClCompile Include="libhls\source\hls-m3u8.cpp" />
     <ClCompile Include="libhls\source\hls_segmenter_mp4.cpp" />
     <ClCompile Include="libhls\source\ualaw_to_linear.cpp" />
     <ClCompile Include="libmov\source\mov-av1.cpp" />
@@ -117,6 +116,7 @@
     <ClCompile Include="libmov\source\mov-writer.cpp" />
     <ClCompile Include="librtp\source\rtp-h264-unpack.cpp" />
     <ClCompile Include="librtp\source\rtp-h265-unpack.cpp" />
+    <ClCompile Include="librtp\source\rtp-mp4a-latm-unpack.cpp" />
     <ClCompile Include="librtp\source\rtp-mpeg4-generic-unpack.cpp" />
     <ClCompile Include="librtp\source\rtp-pack.cpp" />
     <ClCompile Include="librtp\source\rtp-packet.cpp" />
@@ -130,7 +130,6 @@
     <ClInclude Include="libhls\include\fmp4-writer.h" />
     <ClInclude Include="libhls\include\hls-fmp4.h" />
     <ClInclude Include="libhls\include\hls-m3u.h" />
-    <ClInclude Include="libhls\include\hls-m3u8.h" />
     <ClInclude Include="libhls\include\hls-param.h" />
     <ClInclude Include="libhls\include\hls_segmenter_mp4.h" />
     <ClInclude Include="libhls\include\list.h" />
@@ -157,22 +156,22 @@
   </ItemGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">
     <Link>
-      <LibraryDependencies>avformat;avcodec;avutil;avdevice;swresample;swscale;fdk-aac</LibraryDependencies>
+      <LibraryDependencies>fdk-aac</LibraryDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">
     <Link>
-      <LibraryDependencies>avformat;avcodec;avutil;avdevice;swresample;swscale;fdk-aac</LibraryDependencies>
+      <LibraryDependencies>fdk-aac</LibraryDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <Link>
-      <LibraryDependencies>avformat;avcodec;avutil;avdevice;swresample;swscale;fdk-aac</LibraryDependencies>
+      <LibraryDependencies>fdk-aac</LibraryDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x86'">
     <Link>
-      <LibraryDependencies>avformat;avcodec;avutil;avdevice;swresample;swscale;fdk-aac</LibraryDependencies>
+      <LibraryDependencies>fdk-aac</LibraryDependencies>
     </Link>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

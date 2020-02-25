@@ -13,7 +13,7 @@ int mov_read_stss(struct mov_t* mov, const struct mov_box_t* box)
 	mov_buffer_r24(&mov->io); /* flags */
 	entry_count = mov_buffer_r32(&mov->io);
 
-	assert(0 == stbl->stss_count && NULL == stbl->stss);
+	/*assert(0 == stbl->stss_count && NULL == stbl->stss);*/
 	if (stbl->stss_count < entry_count)
 	{
 		void* p = realloc(stbl->stss, sizeof(stbl->stss[0]) * entry_count);

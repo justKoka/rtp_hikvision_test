@@ -49,7 +49,6 @@ int mov_read_mvhd(struct mov_t* mov, const struct mov_box_t* box)
 	}
 	else
 	{
-		assert(0 == mvhd->version);
 		mvhd->creation_time = mov_buffer_r32(&mov->io);
 		mvhd->modification_time = mov_buffer_r32(&mov->io);
 		mvhd->timescale = mov_buffer_r32(&mov->io);

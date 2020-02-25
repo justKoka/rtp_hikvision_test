@@ -13,7 +13,7 @@ int mov_read_stts(struct mov_t* mov, const struct mov_box_t* box)
 	mov_buffer_r24(&mov->io); /* flags */
 	entry_count = mov_buffer_r32(&mov->io);
 
-	assert(0 == stbl->stts_count && NULL == stbl->stts); // duplicated STTS atom
+	/*assert(0 == stbl->stts_count && NULL == stbl->stts);*/ // duplicated STTS atom
 	if (stbl->stts_count < entry_count)
 	{
 		void* p = realloc(stbl->stts, sizeof(struct mov_stts_t) * entry_count);
@@ -42,7 +42,7 @@ int mov_read_ctts(struct mov_t* mov, const struct mov_box_t* box)
 	mov_buffer_r24(&mov->io); /* flags */
 	entry_count = mov_buffer_r32(&mov->io);
 
-	assert(0 == stbl->ctts_count && NULL == stbl->ctts); // duplicated CTTS atom
+	/*assert(0 == stbl->ctts_count && NULL == stbl->ctts);*/ // duplicated CTTS atom
 	if (stbl->ctts_count < entry_count)
 	{
 		void* p = realloc(stbl->ctts, sizeof(struct mov_stts_t) * entry_count);
@@ -150,12 +150,12 @@ uint32_t mov_build_stts(struct mov_track_t* track)
 
     for (i = 0; i < track->sample_count; i++)
     {
-		assert(track->samples[i + 1].dts >= track->samples[i].dts || i + 1 == track->sample_count);
+		/*assert(track->samples[i + 1].dts >= track->samples[i].dts || i + 1 == track->sample_count);*/
         delta = (uint32_t)(i + 1 < track->sample_count && track->samples[i + 1].dts > track->samples[i].dts ? track->samples[i + 1].dts - track->samples[i].dts : 1);
         if (NULL != sample && delta == sample->samples_per_chunk)
         {
             track->samples[i].first_chunk = 0;
-            assert(sample->first_chunk > 0);
+            /*assert(sample->first_chunk > 0);*/
             ++sample->first_chunk; // compress
         }
         else
@@ -182,7 +182,7 @@ uint32_t mov_build_ctts(struct mov_track_t* track)
         if (i > 0 && delta == sample->samples_per_chunk)
         {
             track->samples[i].first_chunk = 0;
-            assert(sample->first_chunk > 0);
+            /*assert(sample->first_chunk > 0);*/
             ++sample->first_chunk; // compress
         }
         else
@@ -214,7 +214,7 @@ void mov_apply_stts(struct mov_track_t* track)
             track->samples[n].pts = track->samples[n].dts;
         }
     }
-    assert(n - 1 == track->sample_count); // see more mov_read_stsz
+    /*assert(n - 1 == track->sample_count);*/ // see more mov_read_stsz
 }
 
 void mov_apply_ctts(struct mov_track_t* track)
@@ -231,7 +231,7 @@ void mov_apply_ctts(struct mov_track_t* track)
         if (delta < 0 && dts_shift > delta && delta != -1 /* see more cslg box*/)
             dts_shift = delta;
     }
-    assert(dts_shift <= 0);
+    /*assert(dts_shift <= 0);*/
 
     // sample cts/pts
     for (i = 0, n = 0; i < stbl->ctts_count; i++)
@@ -239,5 +239,5 @@ void mov_apply_ctts(struct mov_track_t* track)
         for (j = 0; j < stbl->ctts[i].sample_count; j++, n++)
             track->samples[n].pts += (int64_t)((int32_t)stbl->ctts[i].sample_delta - dts_shift); // always as int, fixed mp4box delta version error
     }
-    assert(0 == stbl->ctts_count || n == track->sample_count);
+    /*assert(0 == stbl->ctts_count || n == track->sample_count);*/
 }

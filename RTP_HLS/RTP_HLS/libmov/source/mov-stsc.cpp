@@ -23,7 +23,7 @@ int mov_read_stsc(struct mov_t* mov, const struct mov_box_t* box)
 	mov_buffer_r24(&mov->io); /* flags */
 	entry_count = mov_buffer_r32(&mov->io);
 
-	assert(0 == stbl->stsc_count && NULL == stbl->stsc); // duplicated STSC atom
+	/*assert(0 == stbl->stsc_count && NULL == stbl->stsc);*/ // duplicated STSC atom
 	if (stbl->stsc_count < entry_count)
 	{
 		void* p = realloc(stbl->stsc, sizeof(struct mov_stsc_t) * (entry_count + 1/*stco count*/));

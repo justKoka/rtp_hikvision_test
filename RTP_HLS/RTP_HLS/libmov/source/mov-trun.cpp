@@ -94,7 +94,7 @@ size_t mov_write_trun(const struct mov_t* mov, size_t from, size_t count, uint32
 	const struct mov_track_t* track = mov->track;
 
     if (count < 1) return 0;
-    assert(from + count <= track->sample_count);
+    /*assert(from + count <= track->sample_count);*/
     flags = MOV_TRUN_FLAG_DATA_OFFSET_PRESENT;
     if (track->samples[from].flags & MOV_AV_FLAG_KEYFREAME)
         flags |= MOV_TRUN_FLAG_FIRST_SAMPLE_FLAGS_PRESENT;
@@ -119,7 +119,7 @@ size_t mov_write_trun(const struct mov_t* mov, size_t from, size_t count, uint32
 	mov_buffer_w24(&mov->io, flags); /* flags */
 	mov_buffer_w32(&mov->io, count); /* sample_count */
 
-    assert(flags & MOV_TRUN_FLAG_DATA_OFFSET_PRESENT);
+    /*assert(flags & MOV_TRUN_FLAG_DATA_OFFSET_PRESENT);*/
 	if (flags & MOV_TRUN_FLAG_DATA_OFFSET_PRESENT)
 	{
 		mov_buffer_w32(&mov->io, moof + (uint32_t)track->samples[from].offset);
@@ -132,7 +132,7 @@ size_t mov_write_trun(const struct mov_t* mov, size_t from, size_t count, uint32
 		size += 4;
 	}
 
-	assert(from + count <= track->sample_count);
+	/*assert(from + count <= track->sample_count);*/
 	for (i = from; i < from + count; i++)
 	{
 		sample = track->samples + i;
@@ -149,7 +149,7 @@ size_t mov_write_trun(const struct mov_t* mov, size_t from, size_t count, uint32
 			size += 4;
 		}
 
-		assert(0 == (flags & MOV_TRUN_FLAG_SAMPLE_FLAGS_PRESENT));
+		/*assert(0 == (flags & MOV_TRUN_FLAG_SAMPLE_FLAGS_PRESENT));*/
 //		mov_buffer_w32(&mov->io, 0); /* sample_flags */
 
 		if (flags & MOV_TRUN_FLAG_SAMPLE_COMPOSITION_TIME_OFFSET_PRESENT)

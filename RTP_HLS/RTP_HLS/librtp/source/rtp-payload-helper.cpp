@@ -81,7 +81,6 @@ int rtp_payload_write(struct rtp_payload_helper_t* helper, const struct rtp_pack
 		helper->capacity = size;
 	}
 
-	assert(helper->capacity >= helper->size + pkt->payloadlen);
 	memcpy(helper->ptr + helper->size, pkt->payload, pkt->payloadlen);
 	helper->size += pkt->payloadlen;
 	return 0;
@@ -92,7 +91,6 @@ int rtp_payload_onframe(struct rtp_payload_helper_t *helper)
 	if (helper->size > 0)
 	{
 		// previous packet done
-		assert(!helper->lost);
 		helper->handler.packet(helper->cbparam, helper->ptr, helper->size, helper->timestamp, helper->flags);
 		helper->flags &= ~RTP_PAYLOAD_FLAG_PACKET_LOST; // clear packet lost flag	
 	}

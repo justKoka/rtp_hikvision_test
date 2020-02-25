@@ -15,7 +15,7 @@ int mov_read_stsz(struct mov_t* mov, const struct mov_box_t* box)
 	sample_size = mov_buffer_r32(&mov->io);
 	sample_count = mov_buffer_r32(&mov->io);
 
-	assert(0 == track->sample_count && NULL == track->samples); // duplicated STSZ atom
+	/*assert(0 == track->sample_count && NULL == track->samples);*/ // duplicated STSZ atom
 	if (track->sample_count < sample_count)
 	{
 		void* p = realloc(track->samples, sizeof(struct mov_sample_t) * (sample_count + 1));
@@ -53,8 +53,8 @@ int mov_read_stz2(struct mov_t* mov, const struct mov_box_t* box)
 	field_size = mov_buffer_r8(&mov->io);
 	sample_count = mov_buffer_r32(&mov->io);
 
-	assert(4 == field_size || 8 == field_size || 16 == field_size);
-	assert(0 == track->sample_count && NULL == track->samples); // duplicated STSZ atom
+	/*assert(4 == field_size || 8 == field_size || 16 == field_size);
+	assert(0 == track->sample_count && NULL == track->samples);*/ // duplicated STSZ atom
 	if (track->sample_count < sample_count)
 	{
 		void* p = realloc(track->samples, sizeof(struct mov_sample_t) * (sample_count + 1));

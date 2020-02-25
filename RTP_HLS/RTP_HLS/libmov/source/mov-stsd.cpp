@@ -316,7 +316,6 @@ int mov_read_stsd(struct mov_t* mov, const struct mov_box_t* box)
 		}
 		else
 		{
-			assert(0); // ignore
 			mov_read_meta_sample_entry(mov, &track->stsd.entries[i]);
 		}
 	}
@@ -347,7 +346,7 @@ static int mov_write_video(const struct mov_t* mov, const struct mov_sample_entr
 	uint64_t offset;
     char compressorname[32];
     memset(compressorname, 0, sizeof(compressorname));
-	assert(1 == entry->data_reference_index);
+	/*assert(1 == entry->data_reference_index);*/
 
 	size = 8 /* Box */ + 8 /* SampleEntry */ + 70 /* VisualSampleEntry */;
 
@@ -488,7 +487,7 @@ size_t mov_write_stsd(const struct mov_t* mov)
 		}
 		else
 		{
-			assert(0);
+			return -1;
 		}
 	}
 

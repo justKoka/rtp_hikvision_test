@@ -64,7 +64,6 @@ size_t mov_write_dops(const struct mov_t* mov)
     if (entry->extra_data_size < 18)
         return 0;
     
-    assert(0 == memcmp(entry->extra_data, "OpusHead", 8));
     mov_buffer_w32(&mov->io, entry->extra_data_size); /* size */
     mov_buffer_write(&mov->io, "dOps", 4);
     mov_buffer_w8(&mov->io, 0); // The Version field shall be set to 0.

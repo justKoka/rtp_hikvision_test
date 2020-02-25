@@ -10,7 +10,6 @@ int m_nCurrentBit;
 
 unsigned int ReadBit()
 {
-	assert(m_nCurrentBit <= m_nLength * 8);
 	int nIndex = m_nCurrentBit / 8;
 	int nOffset = m_nCurrentBit % 8 + 1;
 
@@ -58,7 +57,7 @@ unsigned int ReadSE()
 	return r;
 }
 
-void Parse(hls_segmenter *hls, const unsigned char * pStart, unsigned short nLen)
+std::pair<int, int> Parse(const unsigned char * pStart, unsigned short nLen)
 {
 	m_pStart = pStart;
 	m_nLength = nLen;
@@ -165,7 +164,8 @@ void Parse(hls_segmenter *hls, const unsigned char * pStart, unsigned short nLen
 
 	int Width = ((pic_width_in_mbs_minus1 + 1) * 16) - frame_crop_right_offset * 2 - frame_crop_left_offset * 2;
 	int Height = ((2 - frame_mbs_only_flag)* (pic_height_in_map_units_minus1 + 1) * 16) - (frame_crop_bottom_offset * 2) - (frame_crop_top_offset * 2);
-	hls->width = Width;
-	hls->height = Height;
-	printf("\n\nWxH = %dx%d\n\n", Width, Height);
+	std::pair<int, int> width_height_pair;
+	width_height_pair.first = Width;
+	width_height_pair.second = Height;
+	return width_height_pair;
 }

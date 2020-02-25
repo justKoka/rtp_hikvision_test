@@ -29,7 +29,7 @@ int mov_read_stco(struct mov_t* mov, const struct mov_box_t* box)
 	mov_buffer_r24(&mov->io); /* flags */
 	entry_count = mov_buffer_r32(&mov->io);
 
-	assert(0 == stbl->stco_count && NULL == stbl->stco);
+	/*assert(0 == stbl->stco_count && NULL == stbl->stco);*/
 	if (stbl->stco_count < entry_count)
 	{
 		void* p = realloc(stbl->stco, sizeof(stbl->stco[0]) * entry_count);
@@ -51,7 +51,6 @@ int mov_read_stco(struct mov_t* mov, const struct mov_box_t* box)
 	else
 	{
 		i = 0;
-		assert(0);
 	}
 
 	stbl->stco_count = i;
@@ -120,7 +119,7 @@ uint32_t mov_build_stco(struct mov_track_t* track)
     uint32_t count = 0;
     struct mov_sample_t* sample = NULL;
 
-    assert(track->stsd.entry_count > 0);
+    /*assert(track->stsd.entry_count > 0);*/
     for (i = 0; i < track->sample_count; i++)
     {
         if (NULL != sample
@@ -150,11 +149,11 @@ void mov_apply_stco(struct mov_track_t* track)
     struct mov_stbl_t* stbl = &track->stbl;
 
     // sample offset
-    assert(stbl->stsc_count > 0 && stbl->stco_count > 0);
+    /*assert(stbl->stsc_count > 0 && stbl->stco_count > 0);*/
     stbl->stsc[stbl->stsc_count].first_chunk = stbl->stco_count + 1; // fill stco count
     for (i = 0, n = 0; i < stbl->stsc_count; i++)
     {
-        assert(stbl->stsc[i].first_chunk <= stbl->stco_count);
+        /*assert(stbl->stsc[i].first_chunk <= stbl->stco_count);*/
         for (j = stbl->stsc[i].first_chunk; j < stbl->stsc[i + 1].first_chunk; j++)
         {
             chunk_offset = stbl->stco[j - 1]; // chunk start from 1
@@ -164,11 +163,11 @@ void mov_apply_stco(struct mov_track_t* track)
                 track->samples[n].offset = chunk_offset;
                 track->samples[n].data = NULL;
                 chunk_offset += track->samples[n].bytes;
-                assert(track->samples[n].bytes > 0);
-                assert(0 == n || track->samples[n - 1].offset + track->samples[n - 1].bytes <= track->samples[n].offset);
+                /*assert(track->samples[n].bytes > 0);*/
+               /*assert(0 == n || track->samples[n - 1].offset + track->samples[n - 1].bytes <= track->samples[n].offset);*/
             }
         }
     }
 
-    assert(n == track->sample_count);
+    /*assert(n == track->sample_count);*/
 }
