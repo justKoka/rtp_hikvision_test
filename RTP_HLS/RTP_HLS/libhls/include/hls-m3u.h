@@ -13,14 +13,13 @@ class hls_m3u_t
 	size_t capacity; //max number of segments in playlist
 	size_t remaining; //number of remaining segments in new playlist
 	std::list<std::pair<int, std::string>> segment_list;
-	std::string path; //path to working directory (video/audio, only audio)
 	std::string filename;
 	std::string initFilename; // file that required to parse all segments (x-map)
 	FILE* fd;
-	bool endlist = false;
+	bool endlist = false; // ext-x-endlist set
 public:
 	hls_m3u_t() { }
-	hls_m3u_t(int version, int64_t seq, int64_t duration, size_t capacity, size_t remaining, std::string filename) : version(version), seq(seq), duration(duration), filename(filename) { }
+	hls_m3u_t(int version, int64_t seq, int64_t duration, size_t capacity, size_t remaining, std::string filename) : version(version), seq(seq), duration(duration), filename(filename), capacity(capacity), remaining(remaining) { }
 	void set_x_map(std::string initFilename);
 	void set_x_endlist();
 	int playlist_write();

@@ -146,9 +146,9 @@ static int rtp_h265_unpack_ap(struct rtp_decode_h265_t *unpacker, const uint8_t*
 
 #pragma pack(push, 1)
 struct H265FUheader {
-	uint8_t S : 1;
-	uint8_t E : 1;
 	uint8_t Type : 6;
+	uint8_t E : 1;
+	uint8_t S : 1;
 };
 #pragma pack(pop)
 

@@ -190,10 +190,10 @@ static int rtp_h264_unpack_mtap(struct rtp_decode_h264_t *unpacker, const uint8_
 
 #pragma pack(push, 1)
 struct H264FUheader {
-	uint8_t S : 1;
-	uint8_t E : 1;
-	uint8_t R : 1;
 	uint8_t Type : 5;
+	uint8_t R : 1;
+	uint8_t E : 1;
+	uint8_t S : 1;
 };
 #pragma pack(pop)
 
