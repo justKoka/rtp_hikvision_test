@@ -4,21 +4,26 @@
 #include <iostream>
 #include <sstream>
 
-int hls_m3u_t::add_segment(int duration, const char uri[]) {
+int hls_m3u_t::add_segment(double duration, const char uri[], const void* data, size_t bytes) {
 	if (count < capacity)
 	{
-		std::pair<int, std::string> segment = std::make_pair(duration, uri);
-		segment_list.push_front(segment);
+		fmp4_segment segment(duration, uri, data, bytes);
+		segment_list.push_back(segment);
+		segment_map[uri] = segment_list.end();
 		count++;
 		return 0;
 	}
-	else 
+	else {
 		delete_segment(count - remaining);
+		return 1;
+	}
 }
 
-void hls_m3u_t::set_x_map(std::string initFilename)
+void hls_m3u_t::set_x_map(std::string initFilename, void* data, size_t bytes)
 {
 	this->initFilename = initFilename;
+	initFile.reserve(bytes);
+	memcpy(&initFile[0], data, bytes);
 }
 
 void hls_m3u_t::set_x_endlist()
@@ -26,31 +31,32 @@ void hls_m3u_t::set_x_endlist()
 	endlist = true;
 }
 
-int hls_m3u_t::playlist_write() {
-	fd = fopen(filename.c_str(), "wb");
-	if (fd != NULL) {
-		std::stringstream ssplaylist;
-		ssplaylist << "#EXTM3U\n" << "#EXT-X-VERSION:" << version << '\n' << "#EXT-X-TARGETDURATION:" << duration << '\n' << "#EXT-X-MEDIA-SEQUENCE:" << seq << '\n' << "#EXT-X-PLAYLIST-TYPE:EVENT\n" << "#EXT-X-MAP:URI=\"" << initFilename.c_str() << '\"';
-		for (std::pair<int, std::string> segment : segment_list)
-				ssplaylist << "#EXTINF:" << segment.first << '\n' << segment.second.c_str() << '\n';
-		ssplaylist << (endlist) ? "#EXT-X-ENDLIST\n" : "";
-		size_t nbytes = fwrite(ssplaylist.str().c_str(), 1, ssplaylist.str().length(), fd);
-		return nbytes;
-	}
-	else
-		return errno;
-}
-
 int hls_m3u_t::delete_segment(int number_of_segments) {
 	for (int i = 0; i < number_of_segments; ++i) {
-		segment_list.pop_back();
+		segment_map.erase(segment_list.front().name);
+		segment_list.pop_front();
 	}
 	seq += number_of_segments;
 	count -= number_of_segments;
 	return number_of_segments;
 }
 
-std::string hls_m3u_t::playlist_request() {
-	playlist_write();
-	return filename;
+std::string hls_m3u_t::playlist_data()
+{
+	std::stringstream ssplaylist;
+	ssplaylist << "#EXTM3U\n" << "#EXT-X-VERSION:" << version << '\n' << "#EXT-X-TARGETDURATION:" << duration << '\n' << "#EXT-X-MEDIA-SEQUENCE:" << seq << '\n' << "#EXT-X-PLAYLIST-TYPE:EVENT\n" << "#EXT-X-MAP:URI=\"" << url.c_str() << initFilename.c_str() << "\"\n";
+	for (fmp4_segment segment : segment_list)
+		ssplaylist << "#EXTINF:" << segment.EXTINF << '\n' << url.c_str() << segment.name.c_str() << '\n';
+	ssplaylist << (endlist) ? "#EXT-X-ENDLIST\n" : "";
+	return ssplaylist.str();
+}
+
+std::vector<uint8_t> hls_m3u_t::get_segment(std::string name)
+{
+	return (segment_map.find(name) != segment_map.end()) ? segment_map[name]->data : std::vector<uint8_t>();
+}
+
+std::vector<uint8_t> hls_m3u_t::get_init_file()
+{
+	return initFile;
 }

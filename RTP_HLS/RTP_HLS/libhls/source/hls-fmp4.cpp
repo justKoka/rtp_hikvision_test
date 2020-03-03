@@ -164,7 +164,7 @@ int hls_fmp4_input(struct hls_fmp4_t* hls, int track, const void* data, size_t b
 	{
 		segment = 1;
 	}
-	else if (hls->audio_only_flag && dts - hls->dts >= hls->duration)
+	else if (/*hls->audio_only_flag && */dts - hls->dts >= hls->duration)
 	{
 		// audio only file
 		segment = 1;
@@ -182,7 +182,7 @@ int hls_fmp4_input(struct hls_fmp4_t* hls, int track, const void* data, size_t b
 			r = fmp4_writer_save_segment(hls->mp4);
 			if (0 == r)
 			{
-				duration = ((force_new_segment || dts > hls->dts_last + 100) ? hls->dts_last : dts) - hls->dts;
+				duration = hls->dts_last- hls->dts;
 				r = hls->handler(hls->param, hls->ptr, hls->bytes, hls->pts, hls->dts, duration);
 			}
 			if (0 != r) return r;

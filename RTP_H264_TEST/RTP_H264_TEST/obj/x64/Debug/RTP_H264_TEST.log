@@ -25,13 +25,13 @@ D:\cpp\RTP_HIKVISION_TEST\RTP_H264_TEST\RTP_H264_TEST\main.cpp(59,35): warning :
 D:\cpp\RTP_HIKVISION_TEST\RTP_H264_TEST\RTP_H264_TEST\main.cpp(60,20): warning : conversion to ‘uint8_t {aka unsigned char}’ from ‘int’ may alter its value [-Wconversion]
 D:\cpp\RTP_HIKVISION_TEST\RTP_H264_TEST\RTP_H264_TEST\main.cpp(60,20): warning :    buffer[6] = 0xFC | ((len / 1024) & 0x03);
 D:\cpp\RTP_HIKVISION_TEST\RTP_H264_TEST\RTP_H264_TEST\main.cpp(60,20): warning :                ~~~~~^~~~~~~~~~~~~~~~~~~~~~~
-D:\cpp\RTP_HIKVISION_TEST\RTP_H264_TEST\RTP_H264_TEST\main.cpp(106,20): warning : comparison between signed and unsigned integer expressions [-Wsign-compare]
-D:\cpp\RTP_HIKVISION_TEST\RTP_H264_TEST\RTP_H264_TEST\main.cpp(106,20): warning :   for (int i = 0; i < strlen(input); i += 2) {
-D:\cpp\RTP_HIKVISION_TEST\RTP_H264_TEST\RTP_H264_TEST\main.cpp(106,20): warning :                   ~~^~~~~~~~~~~~~~~
-D:\cpp\RTP_HIKVISION_TEST\RTP_H264_TEST\RTP_H264_TEST\main.cpp(107,72): warning : conversion to ‘uint8_t {aka unsigned char}’ from ‘int’ may alter its value [-Wconversion]
-D:\cpp\RTP_HIKVISION_TEST\RTP_H264_TEST\RTP_H264_TEST\main.cpp(104,12): warning : ‘int convertCharStreamToHex(const char*, uint8_t*)’ defined but not used [-Wunused-function]
-D:\cpp\RTP_HIKVISION_TEST\RTP_H264_TEST\RTP_H264_TEST\main.cpp(104,12): warning :  static int convertCharStreamToHex(const char input[], uint8_t *output) {
-D:\cpp\RTP_HIKVISION_TEST\RTP_H264_TEST\RTP_H264_TEST\main.cpp(104,12): warning :             ^~~~~~~~~~~~~~~~~~~~~~
+D:\cpp\RTP_HIKVISION_TEST\RTP_H264_TEST\RTP_H264_TEST\main.cpp(115,20): warning : comparison between signed and unsigned integer expressions [-Wsign-compare]
+D:\cpp\RTP_HIKVISION_TEST\RTP_H264_TEST\RTP_H264_TEST\main.cpp(115,20): warning :   for (int i = 0; i < strlen(input); i += 2) {
+D:\cpp\RTP_HIKVISION_TEST\RTP_H264_TEST\RTP_H264_TEST\main.cpp(115,20): warning :                   ~~^~~~~~~~~~~~~~~
+D:\cpp\RTP_HIKVISION_TEST\RTP_H264_TEST\RTP_H264_TEST\main.cpp(116,72): warning : conversion to ‘uint8_t {aka unsigned char}’ from ‘int’ may alter its value [-Wconversion]
+D:\cpp\RTP_HIKVISION_TEST\RTP_H264_TEST\RTP_H264_TEST\main.cpp(113,12): warning : ‘int convertCharStreamToHex(const char*, uint8_t*)’ defined but not used [-Wunused-function]
+D:\cpp\RTP_HIKVISION_TEST\RTP_H264_TEST\RTP_H264_TEST\main.cpp(113,12): warning :  static int convertCharStreamToHex(const char input[], uint8_t *output) {
+D:\cpp\RTP_HIKVISION_TEST\RTP_H264_TEST\RTP_H264_TEST\main.cpp(113,12): warning :             ^~~~~~~~~~~~~~~~~~~~~~
 D:\cpp\RTP_HIKVISION_TEST\RTP_H264_TEST\RTP_H264_TEST\main.cpp(33,13): warning : ‘void rtp_decode_packet(void*, const void*, int, uint32_t, int)’ defined but not used [-Wunused-function]
 D:\cpp\RTP_HIKVISION_TEST\RTP_H264_TEST\RTP_H264_TEST\main.cpp(33,13): warning :  static void rtp_decode_packet(void* param, const void *packet, int bytes, uint32_t timestamp, int flags)
 D:\cpp\RTP_HIKVISION_TEST\RTP_H264_TEST\RTP_H264_TEST\main.cpp(33,13): warning :              ^~~~~~~~~~~~~~~~~

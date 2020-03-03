@@ -6,9 +6,6 @@ static char s_packet[2 * 1024 * 1024];
 
 static void* rtp_alloc(void* /*param*/, int bytes)
 {
-	//static uint8_t buffer[2 * 1024 * 1024 + 4] = { 0, 0, 0, 1, };
-	//assert(bytes <= sizeof(buffer) - 4);
-	//return buffer + 4;
 }
 
 static void rtp_free(void* /*param*/, void * /*packet*/)
@@ -16,11 +13,11 @@ static void rtp_free(void* /*param*/, void * /*packet*/)
 }
 
 static void rtp_decode_packet(void* param, const void *packet, int bytes, uint32_t timestamp, int flags) {
-	struct rtp_payload_test_t* ctx = (struct rtp_payload_test_t*)param;
+	rtp_payload_test_t* ctx = (struct rtp_payload_test_t*)param;
 
-	static uint8_t buffer[1024 * 1024];
-	if (bytes + 4 > sizeof(buffer) || (flags & 0x01)) {
-		std::cerr << "something is wrong with decoding rtp packet" << std::endl;
+	uint8_t buffer[1024 * 1024];
+	if (flags & 0x01) {
+		printf("rtp packet lost with timestamp %u\n", timestamp);
 		return;
 	}
 	size_t size = 0;
@@ -69,22 +66,18 @@ static void rtp_decode_packet(void* param, const void *packet, int bytes, uint32
 
 static int hls_fmp4_segment(void* m3u, const void* data, size_t bytes, int64_t, int64_t dts, int64_t duration) {
 	static int i = 0;
-	static char name[128] = { 0 };
-	snprintf(name, sizeof(name), "hls_%d.mp4", ++i);
-	FILE* fp = fopen(name, "wb");
-	fwrite(data, 1, bytes, fp);
-	fclose(fp);
+	char name[128] = { 0 };
 	hls_m3u_t* m3u8 = (hls_m3u_t*)m3u;
-	return m3u8->add_segment(duration, name);
+	snprintf(name, sizeof(name), "hls_%d.mp4", ++i);
+	double extinf = (double)duration / 1000;
+	m3u8->add_segment(extinf, name, data, bytes);
+	return 0;
 }
 
-static int hls_fmp4_init_segment(hls_fmp4_t* hls, hls_m3u_t* m3u) // todo: change to m3u
+static int hls_init_segment(hls_fmp4_t* hls, hls_m3u_t* m3u, std::string filename)
 {
 	int bytes = hls_fmp4_init_segment(hls, s_packet, sizeof(s_packet));
-	FILE* fp=fopen("main.mp4", "wb");
-	m3u->set_x_map("main.mp4");
-	fwrite(s_packet, 1, bytes, fp);
-	fclose(fp);
+	m3u->set_x_map(filename, s_packet, bytes);
 	return bytes;
 }
 
@@ -124,7 +117,7 @@ int hls_segmenter::pack(int64_t timestamp, const void *packet, int size, const c
 		double time_base;
 		if (0 == strcasecmp("mpeg4-generic", encoding) || 0 == strcasecmp("pcmu", encoding) || 0 == strcasecmp("pcma", encoding))
 		{
-			time_base = 1.0 / 8000;
+			time_base = 1.0 / sample_rate;
 			pts = (int64_t)(timestamp * time_base * 1000);
 			dts = pts;
 			return hls_fmp4_input(hls, track_aac, packet, size, pts, dts, 0);
@@ -136,7 +129,7 @@ int hls_segmenter::pack(int64_t timestamp, const void *packet, int size, const c
 			dts = pts;
 			return hls_fmp4_input(hls, track_264, packet, size, pts, dts, (keyframe == 1) ? MOV_AV_FLAG_KEYFREAME : 0);
 		}
-		else if (0 == strcmp("H265", encoding))
+		else if (0 == strcmp("H265", encoding) || 0 == strcmp("HEVC", encoding))
 		{
 			time_base = 1.0 / 90000;
 			pts = (int64_t)(timestamp * time_base * 1000);
@@ -153,9 +146,11 @@ hls_segmenter::hls_segmenter()
 {
 }
 
-hls_segmenter::hls_segmenter(int duration, int playlist_capacity = 20, int remaining = 6)
+hls_segmenter::hls_segmenter(int duration, int playlist_capasity, int playlist_remaining, std::string url)
 {
-	init(duration, playlist_capacity, remaining);
+	hls_m3u_t m3u(7, 0, duration, playlist_capasity, playlist_remaining, url);
+	this->m3u8 = m3u;
+	this->hls = hls_fmp4_create(duration * 1000, hls_fmp4_segment, &m3u8);
 }
 
 hls_segmenter::~hls_segmenter()
@@ -169,11 +164,9 @@ playlist_capasity  - max number of segments in playlist
 playlist_remaining - number of last segments, remaining after clearing playlist (playlist is cleared when number of segments >= capacity)
 */
 
-int hls_segmenter::init(int duration, int playlist_capasity = 20, int playlist_remaining = 6) {
-	hls_m3u_t m3u(7, 0, duration, playlist_capasity, playlist_remaining, "playlist.m3u8");
-	this->hls = hls_fmp4_create(duration * 1000, hls_fmp4_segment, NULL);
-	this->m3u8 = m3u;
-	return hls_fmp4_init_segment(hls, &m3u);
+int hls_segmenter::write_init_segment(std::string filename) {
+	
+	return hls_init_segment(hls, &m3u8, filename);
 }
 
 void hls_segmenter::init_video_stream(const char* encoding, int payload, uint8_t * sps, int sps_size)
@@ -215,12 +208,22 @@ void hls_segmenter::init_audio_stream(const char* encoding, int payload, int cha
 	ctxAudio.decoder = rtp_payload_decode_create(ctxAudio.payload, ctxAudio.encoding, &handler, &ctxAudio);
 	audioStream = true;
 	if (payload < 96)
-		fdkaac_enc.aacenc_init(2, channels, sample_rate, 64000); // 2 - audio object type - aac (lc), 64kbit - pcmu/pcma standard
+		fdkaac_enc.aacenc_init(2, channels, sample_rate, bits_per_coded_sample * sample_rate); // 2 - audio object type - aac (lc)
 }
 
-std::string hls_segmenter::playlist()
+std::vector<uint8_t> hls_segmenter::get_segment(std::string name)
 {
-	return m3u8.playlist_request();
+	return m3u8.get_segment(name);
+}
+
+std::vector<uint8_t> hls_segmenter::get_init_file()
+{
+	return m3u8.get_init_file();
+}
+
+std::string hls_segmenter::get_playlist_data()
+{
+	return m3u8.playlist_data();
 }
 
 int hls_segmenter::destroy() {

@@ -124,6 +124,7 @@
     <ClCompile Include="librtp\source\rtp-payload.cpp" />
     <ClCompile Include="librtp\source\sps_parse.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="pcap.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="libhls\include\fdkaac_enc.h" />
@@ -153,6 +154,7 @@
     <ClInclude Include="librtp\include\rtp-profile.h" />
     <ClInclude Include="librtp\include\rtp-util.h" />
     <ClInclude Include="librtp\include\sps_parse.h" />
+    <ClInclude Include="pcap.h" />
   </ItemGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">
     <Link>

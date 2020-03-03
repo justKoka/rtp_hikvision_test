@@ -69,7 +69,7 @@ static void rtp_decode_packet(void* param, const void *packet, int bytes, uint32
 
 int main()
 {
-	struct rtp_payload_test_t ctx;
+	/*struct rtp_payload_test_t ctx;
 	ctx.payload = 96;
 	ctx.encoding = "H264";
 	struct rtp_payload_t handler;
@@ -85,20 +85,29 @@ int main()
 	convertCharStreamToHex("80e048633dadf22e069e3f085c4134999ddf7123daa04ef8e6639743801f363ee88a63acd93e1a9d784cf45c31883e548e7ae45a54af32a6d55071a67d245836163a2a7d4c0a19100ba56dac9140774954dc31671655bb772e519bcec8f012a6ca681348d0aca14a650a7df6f2bbb8c8a3484bf509565b704b3a520f302071240971a5ccb3d7d1d553660680fcb0702689478f4cf6a7ae2ab0c3818b051633069aad617121ff03ab4ad0a08efee31696ddbbade56068c1ceeeaa8ccc9d1d5456b00668d4c0aa3e0e0c2964662ba639c87ca25a691d9fd7d893723bf0dbc091075127ab5f86b72df057336dd5e416c8b0bb27f06bf48aa990c1c63364085f67f7c75e9f00e79fdf040b3fd1433310cb6031e8a0044db6200df90e935ffb47c96dede5e8052e9e7f6732b570692da390e69469934568ebcf4c5aa31c48884ea5dfca7b561bfb88eafa7d1721c0fa2f1322155f0529b4d01b84c75b9b2704b98caa7b06639b96029ce7a17421123b0772a6f400a8b3b05991d94b3a03b0b8e6d7ed6985ba67d7ced3c72869c2a86741b5a44bc4057a6c2f875d8345147e3b872194dd67228884d946b07af028865883404547a834b343d3fa1c4252324ae75b0056dc6c99426e7e36ad0356d250a5883e97fd621713530b7d0721c4b8bc59ece116bf1be740787963a43eb78ae44012e1f3f115bf5eeed0a5c464d057dbd0890238c270554fc780358b2808c88004e784b31a326eb85df97a0d70401379f1c022c5a355eb467f35a1e8876ab4c66b980dbc8ffd1367d578f2949a14edf64fc3379913d5db1f1504c43cf4c90075c8d5b64b94552ba93d5dbfa3848e510192397ca7cc664a36e93c7c3cb8aba1e6572a9261b788858832a5be899b1943150cf27e54e2bbf7d5b8e0171285dd9a261777d56b2841583e3ece0003f8a6c797ec0d09098a537611b027ae031f6943902e9c986533d1f5a9123fac4796d85cf6b7dc5c7bde9f0b8413fee9680db7c6392fd3d7b04fff988c3be3331de80a4a7d4771a01c97306dc08fe68e7ac573c92bc0a7688f541381cd343ba4d8260295dd93504640", rtp_packet);
 	ctx.size = 768;
 	ctx.packet = rtp_packet;
-	rtp_payload_decode_input(ctx.decoder, ctx.packet, ctx.size);
+	rtp_payload_decode_input(ctx.decoder, ctx.packet, ctx.size);*/
 	
-	/*utils::pcap_filereader rtp("rtp-264-fix.pcap");
-	FILE* fp = fopen("rtp-h264-udp-length-with-sc.264", "wb");
+	utils::pcap_filereader rtp("test1.pcap");
+	char buf[128];
+	FILE* fp = fopen("code.txt", "wb");
 	const uint32_t udp_pos = 34;
 	const uint32_t udp_length_pos = 4;
 	const uint32_t udp_header_length = 8;
-	const uint8_t start_code[] = {0x00, 0x00, 0x00, 0x01}
+	int iter = 0;
 	for (auto&& p : rtp) {
 		uint16_t* udp_length_ptr = (uint16_t*)(p.payload + udp_pos + udp_length_pos);
 		uint16_t udp_length = ntohs(*udp_length_ptr);
+		snprintf(buf, 128, "const char packetchar%d[] = \"", iter);
+		fwrite(buf, 1, strlen(buf), fp);
+		memset(buf, 0, 128);
 		fwrite(p.payload + udp_pos + udp_header_length, 1, udp_length - 8, fp);
+		fwrite("\"\n", 1, 2, fp);
+		snprintf(buf, 128, "convertCharStreamToHex(packetchar%d, packethex);\nhls.send_rtp(packethex, 1400);\n", iter);
+		fwrite(buf, 1, strlen(buf), fp);
+		memset(buf, 0, 128);
+		++iter;
 	}
-	return 0;*/
+	return 0;
 }
 
 static int convertCharStreamToHex(const char input[], uint8_t *output) {

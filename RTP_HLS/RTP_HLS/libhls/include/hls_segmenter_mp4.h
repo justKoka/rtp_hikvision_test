@@ -51,17 +51,18 @@ private:
 	bool audioStream = false;
 	bool videoStream = false;
 public:
-
 	AacEncoder fdkaac_enc; // for internal usage
 	int pack(int64_t timestamp, const void *packet, int size, const char *encoding, int keyframe); // for internal usage
 	hls_segmenter();
-	hls_segmenter(int duration, int playlist_capacity, int remaining);
+	hls_segmenter(int duration, int playlist_capasity, int playlist_remaining, std::string url);
 	~hls_segmenter();
 	int send_rtp(uint8_t *packet, int size);
-	int init(int duration, int playlist_capacity, int remaining);
+	int write_init_segment(std::string filename);
 	void init_video_stream(const char* encoding, int payload, uint8_t* sps, int sps_size);
 	void init_audio_stream(const char* encoding, int payload, int channels, int bits_per_coded_sample, int sample_rate);
-	std::string playlist();
+	std::vector<uint8_t> get_segment(std::string name);
+	std::vector<uint8_t> get_init_file();
+	std::string get_playlist_data();
 	int destroy();
 };
 
