@@ -25,8 +25,8 @@ int main()
 	hls_segmenter hls(10, 100, 6, "http://127.0.0.1/");
 	hls.init_video_stream("H264", 96, spshex, 19);
 	hls.init_audio_stream("pcmu", 0, 1, 8, 8000);
-	hls.write_init_segment("init.mp4"); // вызывать после инициализации всех стримов, т.к. пишется init.mp4 со всей метадатой стримов
-	utils::pcap_filereader rtp("test_large.pcap");
+	hls.write_init_segment("init.mp4"); // вызвать после инициализации всех стримов, пишется init.mp4 со всей метадатой стримов
+	utils::pcap_filereader rtp("test.pcap");
 	constexpr uint32_t udp_pos = 34;
 	constexpr uint32_t udp_length_pos = 4;
 	constexpr uint32_t udp_header_length = 8;
@@ -36,5 +36,6 @@ int main()
 			hls.send_rtp(p.payload + udp_pos + udp_header_length, udp_length - udp_header_length);
 		}
 	auto playlist = hls.get_playlist_data();
+	auto init = hls.get_init_file();
 	return 0;
 }

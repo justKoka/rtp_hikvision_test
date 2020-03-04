@@ -19,6 +19,20 @@ int hls_m3u_t::add_segment(double duration, const char uri[], const void* data, 
 	}
 }
 
+int hls_m3u_t::set_playlist_capacity(int number_of_segments, int remaining)
+{
+		if (count > number_of_segments) 
+			delete_segment(count - number_of_segments);
+	capacity = number_of_segments;
+	this->remaining = remaining;
+	return 0;
+}
+
+hls_m3u_t::~hls_m3u_t()
+{
+	delete_segment(count);
+}
+
 void hls_m3u_t::set_x_map(std::string initFilename, void* data, size_t bytes)
 {
 	this->initFilename = initFilename;

@@ -38,6 +38,7 @@ public:
 	void set_x_endlist();
 	int delete_segment(int number_of_segments); // deletes n segments from front
 	int add_segment(double duration, const char uri[], const void* data, size_t bytes); // adds segment to back
+	int set_playlist_capacity(int number_of_segments, int remaining);
 	std::string playlist_data();
 	std::vector<uint8_t> get_segment(std::string name);
 	std::vector<uint8_t> get_init_file();
