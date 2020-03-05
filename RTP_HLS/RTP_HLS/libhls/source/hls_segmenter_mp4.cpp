@@ -226,6 +226,19 @@ std::string hls_segmenter::get_playlist_data()
 	return m3u8.playlist_data();
 }
 
+int hls_segmenter::set_playlist_capacity(int number_of_segments, int remaining)
+{
+	return m3u8.set_playlist_capacity(number_of_segments, remaining);
+}
+
+int hls_segmenter::change_segment_duration(int duration)
+{
+	hls_m3u_t m3u(7, 0, duration, m3u8.get_capacity(), m3u8.get_remaining(), m3u8.get_url());
+	this->m3u8 = m3u;
+	this->hls = hls_fmp4_create(duration * 1000, hls_fmp4_segment, &m3u8);
+	return 0;
+}
+
 int hls_segmenter::destroy() {
 	//freeing all resourses
 	m3u8.set_x_endlist();

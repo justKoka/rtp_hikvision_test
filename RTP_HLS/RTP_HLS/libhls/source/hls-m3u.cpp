@@ -45,6 +45,21 @@ void hls_m3u_t::set_x_endlist()
 	endlist = true;
 }
 
+std::string hls_m3u_t::get_url()
+{
+	return url;
+}
+
+int hls_m3u_t::get_capacity()
+{
+	return capacity;
+}
+
+int hls_m3u_t::get_remaining()
+{
+	return remaining;
+}
+
 int hls_m3u_t::delete_segment(int number_of_segments) {
 	for (int i = 0; i < number_of_segments; ++i) {
 		segment_map.erase(segment_list.front().name);

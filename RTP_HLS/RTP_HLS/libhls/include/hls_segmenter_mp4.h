@@ -63,6 +63,8 @@ public:
 	std::vector<uint8_t> get_segment(std::string name);
 	std::vector<uint8_t> get_init_file();
 	std::string get_playlist_data();
+	int set_playlist_capacity(int number_of_segments, int remaining);
+	int change_segment_duration(int duration);
 	int destroy();
 };
 

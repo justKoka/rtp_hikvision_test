@@ -34,11 +34,15 @@ class hls_m3u_t
 public:
 	hls_m3u_t() { }
 	hls_m3u_t(int version, int64_t seq, int64_t duration, size_t capacity, size_t remaining, std::string url) : version(version), seq(seq), duration(duration), capacity(capacity), remaining(remaining), url(url) { }
+	~hls_m3u_t();
 	void set_x_map(std::string initFilename, void *data, size_t bytes);
 	void set_x_endlist();
+	std::string get_url();
+	int get_capacity();
+	int get_remaining();
+	int set_playlist_capacity(int number_of_segments, int remaining);
 	int delete_segment(int number_of_segments); // deletes n segments from front
 	int add_segment(double duration, const char uri[], const void* data, size_t bytes); // adds segment to back
-	int set_playlist_capacity(int number_of_segments, int remaining);
 	std::string playlist_data();
 	std::vector<uint8_t> get_segment(std::string name);
 	std::vector<uint8_t> get_init_file();
